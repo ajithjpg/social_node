@@ -3,44 +3,36 @@ const mysql = require('mysql');
 
 const app = express();
 
+const cors = require('cors');
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
+const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
-const db = mysql.createConnection({
-  host: "mysql.selfmade.ninja",
-  user: "dilli",
-  password: "Velmurug@1616"
-});
+const corsOptions = {
+  "origin": "*",
+  optionsSuccessStatus: 200
+}
 
-db.connect((err) => {
-  if (err) {
-
-    throw err;
-
-  }
-
-  console.log("MySql Connected");
-
-});
-
+//middlewares
+app.use(cors(corsOptions));
+app.use(bodyParser.json());
 app.use(express.json());
 
-// app.use(morgan("combined"));
-// app.use(
-//   morgan(":method :url :status :res[content-length] - :response-time ms")
-// );
- 
+//routes
 
-
-
-// const cors = require('cors');
-
-
-const notfount = '404 Page Not Found'
-
-app.use(express.json());
 
 // app.use('/project', project);
 // app.use('/task', task);
 // app.use('/users', users);
+
+
+
+
+
+
+const notfount = '404 Page Not Found'
+
 
 app.get('/', (req, res) => {
   
@@ -62,7 +54,7 @@ const hostname = '127.0.0.1';
 
 
 
-app.listen(port, () => {
+app.listen(port,() => {
   
-  console.log(`app listening on port ${hostname}:${port}`);
+  console.log(`app listening on port`);
 });

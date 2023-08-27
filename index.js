@@ -1,10 +1,26 @@
 const express = require("express");
-const morgan = require("morgan");
-const project = require('./components/routes/project.route');
-const task = require('./components/routes/task.route');
-const users = require('./components/routes/user.route');
+const mysql = require('mysql');
 
 const app = express();
+
+
+const db = mysql.createConnection({
+  host: "mysql.selfmade.ninja",
+  user: "dilli",
+  password: "Velmurug@1616"
+});
+
+db.connect((err) => {
+  if (err) {
+
+    throw err;
+
+  }
+
+  console.log("MySql Connected");
+
+});
+
 app.use(express.json());
 
 // app.use(morgan("combined"));
@@ -22,11 +38,12 @@ const notfount = '404 Page Not Found'
 
 app.use(express.json());
 
-app.use('/project', project);
-app.use('/task', task);
-app.use('/users', users);
+// app.use('/project', project);
+// app.use('/task', task);
+// app.use('/users', users);
 
 app.get('/', (req, res) => {
+  
   res.status(200)
   res.send('Sample Node API Version1');
 })

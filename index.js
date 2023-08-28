@@ -17,13 +17,13 @@ const corsOptions = {
 }
 
 
-// const transporter = nodemailer.createTransport({
-//   service: 'Gmail',
-//   auth: {
-//     user: 'photogrm@proton.me',
-//     pass: 'Dilli@123'
-//   }
-// });
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+    user: 'ajithjerry@gmail.com',
+    pass: 'xrntjsjgmkqewqia'
+  }
+});
 
 
 const db = mysql.createPool({
@@ -68,7 +68,7 @@ app.get('/', (req, res) => {
 app.get('/mail', (req, res) => {
   
   const mailOptions = {
-    from: 'photogrm@proton.me',
+    from: 'ajithjerry@gmail.com',
     to: 'dilli@trstscore.com ',
     subject: 'Test Email',
     text: 'Hello, this is a test email from Nodemailer.'
@@ -77,8 +77,12 @@ app.get('/mail', (req, res) => {
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log('Error:', error);
+      res.status(200)
+     res.json(error);
     } else {
       console.log('Email sent:', info.response);
+      res.status(200)
+     res.json(info.response);
     }
   });
 

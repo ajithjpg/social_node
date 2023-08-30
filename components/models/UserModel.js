@@ -2,34 +2,48 @@ const sql = require("./db.js");
 
 module.exports.findByemail = (email) => {
   //0 - ERR , 1 - FOUND , 2 - NOT FOUND
-  sql.query(`SELECT * FROM users WHERE Email ='${email}'`, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      // result(err, null);
-      return 0;
-    }
-    if (res.length != 0) {
-      return 1;
-    } else {
-      return 2;
-    }
+  return new Promise((resolve, reject) => {
+    sql.query(`SELECT * FROM users WHERE Email ='${email}'`, (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(results.length);
+      }
+    });
   });
-
- 
 }
-module.exports.create = (newUser) =>{
-  sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      // result(err, null);
-      return err;
-    }else{
-      console.log(res)
-    }
+module.exports.create = (newUser) => {
+  return new Promise((resolve, reject) => {
+    sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        // result(err, null);
+        reject(err);
+      } else {
+          response ={
+            "Id":res.insertId,
+            "status":1
+          }
+        resolve(response);
+      }
+    });
+  })
 
-    console.log("created tutorial: ", { id: res.ID, ...newUser });
-    // result(null, { id: res.insertId, ...newTutorial });
-  });
+}
+module.exports.update = (id) => {
+  return new Promise((resolve, reject) => {
+    sql.query(`UPDATE users SET IsVerify = 1 WHERE id = '${id}'`, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        // result(err, null);
+        reject(err);
+      } else {
+          
+        resolve(res);
+      }
+    });
+  })
+
 }
 // constructor
 // const Tutorial = function(tutorial) {

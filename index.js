@@ -10,7 +10,8 @@ const userRoutes = require('./components/routes/UserRoutes')
 // const mysql = require('mysql');
 
 const app = express();
-
+var http = require("http").createServer(app);
+var io = require("socket.io")(http);
 const cors = require('cors');
 const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser');
@@ -67,7 +68,7 @@ app.get('/mail', (req, res) => {
   
   const mailOptions = {
     from: 'ajithjerry@gmail.com',
-    to: 'shankarpopz31102000@gmail.com',
+    to: 'dilli@trstscore.com',
     subject: 'Test Email',
     text: 'Hello, this is a test email from Nodemailer.'
   };
@@ -94,10 +95,14 @@ app.get('*', (req, res) => {
 });
 // app.use(cors());
 
+io.on("connection", function (socket) {
+  console.log("User connected", socket.id);
+});
 
 
-
-
+http.listen(3001, function () {
+  console.log("Server started");
+});
 
 
 app.listen(process.env.PORT,() => {

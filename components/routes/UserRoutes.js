@@ -1,5 +1,5 @@
 const express = require("express");
-const {registerroute} = require('../controller/usercontroller')
+const {registerroute,EmailVerification} = require('../controller/usercontroller')
 // import User from '../Model/userModel'
 // import { registerroute, signinroute, adminroute,EmailVerification } from '../controller/usercontroller'
 // import { isAuth, getToken } from '../utils';
@@ -13,7 +13,8 @@ const {registerroute} = require('../controller/usercontroller')
 const router = express.Router({mergeParams:true})
 
  router.post('/register',registerroute)
- 
+ router.get('/emailconfirm/:id',EmailVerification)
+
  // router.post('/confirmation/:token',EmailVerification)
  // router.post('/signin',signinroute)
 

@@ -4,12 +4,24 @@
 // import nodemailer from 'nodemailer'
 // import {hash,compare} from 'bcryptjs'
 // import { restart } from 'nodemon'
-// import { sign, verify } from 'jsonwebtoken'
+
 // import { EMAIL, PASSWORD, JWT_SECRET_KEY } from '../config'
 // import { transport } from '../emailService'
+
+const nodemailer = require('nodemailer')
+require("dotenv").config()
+const { sign, verify } = require('jsonwebtoken')
 const { hash, compare } = require('bcrypt')
 const UserModel = require('../models/UserModel');
 const { isEmpty } = require('../validator')
+
+const transport = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+        user: process.env.email,
+        pass: process.env.email_password
+    }
+})
 
 // const client =new OAuth2Client('"485426421084-eoa7b38nq83it0t5742j08sejfbg9ivh.apps.googleusercontent.com"')
 module.exports = {
@@ -20,23 +32,16 @@ module.exports = {
         if (isEmpty(userRegisterData)) {
             res.send({ msg: 'please enter all feild' })
         } else {
-
             var userExist = await UserModel.findByemail(userRegisterData.email_id)
-            UserModel.findByemail(userRegisterData.email_id).then(result => {
-                console.log(result)
-            })
-            // const userExist = async () => {
-            //     return await  UserModel.findByemail(userRegisterData.email_id);
-            // }
-            console.log(userExist)
-            if (userExist == 2) {
-                console.log('usr already registerd')
-                return res.send('User Already Exist')
+            if (userExist == 1) {
+                console.log('User Already Registered here')
+                return res.send({
+                    'code': 1,
+                    'message': 'User Already Registered here',
+                })
             }
-            return;
-            const HashedPassword = await hash(userRegisterData.confirm_password, 10)
-            console.log(HashedPassword)
 
+            const HashedPassword = await hash(userRegisterData.confirm_password, 10)
             const user = {
                 Name: userRegisterData['name'],
                 Email: userRegisterData.email_id,
@@ -44,12 +49,37 @@ module.exports = {
                 Password: HashedPassword,
                 IsVerify: false
             }
-            const newuser = UserModel.create(user)
+            const newuser = await UserModel.create(user)
             console.log(newuser)
-            return
-            if (newuser) {
+
+            if (newuser.status == 1) {
                 console.log('user register success')
-                return res.send(user)
+                // return res.send({
+                //     'code': 0,
+                //     'message': 'User Register Successfully',
+                // })
+                const accessToken = sign({ id: newuser.Id }, process.env.JWT_SECRET_KEY, {
+                    expiresIn: '1h'
+                })
+                console.log(accessToken)
+
+                const url = `http://localhost:8080/users/emailconfirm/${accessToken}`;
+               
+                transport.sendMail({
+                    to: userRegisterData.email_id,
+                    subject: 'Photogram-Email-Conformation',
+                    html: `please click on <a href=${url}>Confirm </a> `
+                },(err,res)=>{
+                    if(err){
+                        return err
+                    }else{
+                        res.status(200)
+                        res.json({code:0, msg: 'Mail Sent Your Register Mail ID'});
+                        
+                    }
+                })
+               
+               
             }
             else {
                 console.log('some error')
@@ -95,13 +125,14 @@ module.exports = {
             return res.status(404).send({ message: error.message })
         }
     },
-
     //########################################   EMAIL VARIFICATION    ##############################################
     async EmailVerification(req, res) {
+        
         try {
 
-            const { id } = verify(req.params.token, JWT_SECRET_KEY)
-            const { nModified } = await User.updateOne({ _id: id }, { $set: { email_verified: true } })
+            const { id } = verify(req.params.id, process.env.JWT_SECRET_KEY)
+            console.log(id)
+            const { nModified } = await UserModel.update(id)
             if (nModified == 1) {
                 console.log('Email verify Success')
                 return res.send('Email Verify Success')
@@ -110,7 +141,7 @@ module.exports = {
 
         }
         catch (err) {
-            console.log(err.message)
+            console.log('ddd'+err.message)
         }
 
     }

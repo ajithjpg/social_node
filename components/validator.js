@@ -1,6 +1,6 @@
-import jwt from 'jsonwebtoken';
 
-const getToken = (user) => {
+const jwt = require('jsonwebtoken')
+module.exports.getToken = (user) => {
   return jwt.sign(
     {
       _id: user._id,
@@ -15,7 +15,7 @@ const getToken = (user) => {
   );
 };
 
-const isAuth = (req, res, next) => {
+module.exports.isAuth = (req, res, next) => {
   const token = req.headers.authorization;
   // console.log('mytokek:',token)
   if (token) {
@@ -36,12 +36,15 @@ const isAuth = (req, res, next) => {
   }
 };
 
-const isAdmin = (req, res, next) => {
+module.exports.isAdmin = (req, res, next) => {
   // console.log(req.user);
   if (req.user && req.user.isAdmin) {
     return next();
   }
   return res.status(401).send({ message: 'Admin Token is not valid.' });
 };
+module.exports.isEmpty = (object)=> {  
+  return Object.keys(object).length === 0
+}
 
-export { getToken, isAuth, isAdmin };
+

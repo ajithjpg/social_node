@@ -2,23 +2,20 @@ const sql = require("./db.js");
 
 module.exports.findByemail = (email) => {
   //0 - ERR , 1 - FOUND , 2 - NOT FOUND
-  sql.query(`SELECT * FROM users WHERE email = ${email}`, (err, res) => {
+  sql.query(`SELECT * FROM users WHERE Email ='${email}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       // result(err, null);
       return 0;
     }
-
     if (res.length != 0) {
-      console.log("found tutorial: ", res[0]);
-
       return 1;
     } else {
       return 2;
     }
-    // not found Tutorial with the id
-
   });
+
+ 
 }
 module.exports.create = (newUser) =>{
   sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
@@ -26,9 +23,11 @@ module.exports.create = (newUser) =>{
       console.log("error: ", err);
       // result(err, null);
       return err;
+    }else{
+      console.log(res)
     }
 
-    console.log("created tutorial: ", { id: res.id, ...newUser });
+    console.log("created tutorial: ", { id: res.ID, ...newUser });
     // result(null, { id: res.insertId, ...newTutorial });
   });
 }

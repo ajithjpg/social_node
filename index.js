@@ -1,6 +1,13 @@
 require("dotenv").config()
 const express = require("express");
-const mysql = require('mysql');
+
+// const validate = require('./components/validator')
+// import { isAuth, getToken } from './components/validator';
+const userRoutes = require('./components/routes/UserRoutes')
+// import productRoute from './serverside/routes/productroute'
+// import orderRoute from './serverside/routes/orderRoute'
+// import uploadRoute from './serverside/routes/uploadRoute'
+// const mysql = require('mysql');
 
 const app = express();
 
@@ -26,18 +33,11 @@ const transporter = nodemailer.createTransport({
 });
 
 
-const db = mysql.createPool({
-  connectionLimit: 100,
-  host: process.env.DB_HOST,       //This is your localhost IP
-  user: process.env.DB_USER,         // "newuser" created in Step 1(e)
-  password: process.env.DB_PASSWORD,  // password for the new user
-  database: process.env.DB_DATABASE,      // Database name
-  port: process.env.DB_PORT             // port name, "3306" by default
-})
 
-db.getConnection( (err, connection)=> {   if (err) throw (err)
-  console.log ("DB connected successful: " + connection.threadId)}
-  )
+
+// db.getConnection( (err, connection)=> {   if (err) throw (err)
+//   console.log ("DB connected successful: " + connection.threadId)}
+// )
 
 //middlewares
 app.use(cors(corsOptions));
@@ -49,9 +49,7 @@ app.use(express.json());
 
 // app.use('/project', project);
 // app.use('/task', task);
-// app.use('/users', users);
-
-
+app.use('/users', userRoutes);
 
 
 
@@ -69,7 +67,7 @@ app.get('/mail', (req, res) => {
   
   const mailOptions = {
     from: 'ajithjerry@gmail.com',
-    to: 'dilli@trstscore.com ',
+    to: 'shankarpopz31102000@gmail.com',
     subject: 'Test Email',
     text: 'Hello, this is a test email from Nodemailer.'
   };
@@ -92,8 +90,7 @@ app.get('/mail', (req, res) => {
 })
 
 app.get('*', (req, res) => {
-  res.status(404)
-  res.send(`<center><h1> ${notfount}<h1></center>`);
+  res.status(404).json(`${notfount}`);
 });
 // app.use(cors());
 

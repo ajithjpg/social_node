@@ -90,7 +90,7 @@ module.exports = {
     },
     //########################################+++sign-in+++#############################################################################
     async signinroute(req, res) {
-        if (!req.body.name && !req.body.password) {
+        if (req.body.email_id !='' && req.body.password !='') {
             console.log('invalid credetials')
             return res.status(404).send('invalid credentials')
         }

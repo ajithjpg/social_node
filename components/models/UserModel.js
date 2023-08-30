@@ -39,7 +39,7 @@ module.exports.update = (id) => {
         reject(err);
       } else {
           
-        resolve(res);
+        resolve(1);
       }
     });
   })

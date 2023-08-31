@@ -1,14 +1,6 @@
 require("dotenv").config()
 const express = require("express");
-
-// const validate = require('./components/validator')
-// import { isAuth, getToken } from './components/validator';
 const userRoutes = require('./components/routes/UserRoutes')
-// import productRoute from './serverside/routes/productroute'
-// import orderRoute from './serverside/routes/orderRoute'
-// import uploadRoute from './serverside/routes/uploadRoute'
-// const mysql = require('mysql');
-
 const app = express();
 var http = require("http").createServer(app);
 var io = require("socket.io")(http);
@@ -95,14 +87,9 @@ app.get('*', (req, res) => {
 });
 // app.use(cors());
 
-io.on("connection", function (socket) {
-  console.log("User connected", socket.id);
-});
 
 
-http.listen(3001, function () {
-  console.log("Server started");
-});
+
 
 
 app.listen(process.env.PORT,() => {

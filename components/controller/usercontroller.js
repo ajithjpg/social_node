@@ -7,7 +7,7 @@
 
 // import { EMAIL, PASSWORD, JWT_SECRET_KEY } from '../config'
 // import { transport } from '../emailService'
-
+ const {getToken} = require('../validator')
 const nodemailer = require('nodemailer')
 require("dotenv").config()
 const { sign, verify } = require('jsonwebtoken')
@@ -90,36 +90,52 @@ module.exports = {
     },
     //########################################+++sign-in+++#############################################################################
     async signinroute(req, res) {
-        if (req.body.email_id !='' && req.body.password !='') {
-            console.log('invalid credetials')
-            return res.status(404).send('invalid credentials')
+       
+        if (req.body.email_id =='' && req.body.password =='') {
+            
+            return res.status(404).send({
+                code:1,
+                message:'invalid credentials'
+            })
         }
         try {
-            const { _id, name, email, password, email_verified, isAdmin, Address } = await User.findOne({ email: req.body.email })
-            const isMatch = await compare(req.body.password, password)
-            if (!email_verified === false) {
-                if (email && isMatch) {
-                    console.log('login success')
-                    return res.send({
-                        msg: 'login-success',
-                        id: _id,
-                        name: name,
-                        email: email,
-                        email_verified: email_verified,
-                        isAdmin: isAdmin,
-                        token: getToken({ name, email, password, _id, isAdmin }),
-                        address: Address
+            const users= await UserModel.signByemail(req.body.email_id)
+            
+            const isMatch = await compare(req.body.password, users.result.Password)
+         
+            if(users.status == true){
+                const isMatch = await compare(req.body.password, users.result.Password)
+                if(isMatch == true){
+                    if(users.result.IsVerify == 1){
+                        return res.send({
+                            code:0,
+                            message: 'login-success',
+                            id: users.result.ID,
+                            name: users.result.Name,
+                            email: users.result.Email,
+                            email_verified: users.result.IsVerify,
+                            token: getToken(users.result.ID,users.result.Name, users.result.Email,users.result.PhoneNumber),
+                           
+                        })
+                    }else{
+                        return res.send({ 
+                            code:1,
+                            message: 'email not confirmed' 
+                        })
+                    }
+                }else{
+                    return res.send({ 
+                        code:1,
+                        message: 'Invalid Credentials' 
                     })
-
                 }
-                else {
-                    return res.send({ msg: 'Invalid Credentials' })
-                }
+            }else{
+                return res.send({ 
+                    code:1,
+                    message: 'Invalid email' 
+                })
             }
-            else {
-                console.log('email not confirmed')
-                return res.send({ message: 'email not confirmed' })
-            }
+           
 
         } catch (error) {
             return res.status(404).send({ message: error.message })

@@ -45,6 +45,31 @@ module.exports.update = (id) => {
   })
 
 }
+module.exports.signByemail = (email) => {
+  //0 - ERR , 1 - FOUND , 2 - NOT FOUND
+  return new Promise((resolve, reject) => {
+    sql.query(`SELECT * FROM users WHERE Email ='${email}'`, (err, results) => {
+      if (err) {
+        reject(err);
+      } else {
+        if(results.length ==0){
+          var res = {
+            status:false,
+            result:[]
+          }
+       
+        }else{
+          var res = {
+            status:true,
+            result:results[0]
+          }
+        }
+        resolve(res);
+        
+      }
+    });
+  });
+}
 // constructor
 // const Tutorial = function(tutorial) {
 //   this.title = tutorial.title;

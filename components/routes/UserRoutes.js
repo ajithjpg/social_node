@@ -1,26 +1,15 @@
 const express = require("express");
 const {registerroute,EmailVerification,signinroute} = require('../controller/usercontroller')
-// import User from '../Model/userModel'
-// import { registerroute, signinroute, adminroute,EmailVerification } from '../controller/usercontroller'
-// import { isAuth, getToken } from '../utils';
-// import {hash} from 'bcryptjs'
-// import { TokenExpiredError, verify, sign } from 'jsonwebtoken';
-// import { JWT_SECRET_KEY, PASSWORD, EMAIL } from '../config';
-// import nodemailer from 'nodemailer'
-// import { CostExplorer } from 'aws-sdk';
-// import { transport } from '../emailService';
+
 
 const router = express.Router({mergeParams:true})
 
  router.post('/register',registerroute)
  router.get('/emailconfirm/:id',EmailVerification)
 
- // router.post('/confirmation/:token',EmailVerification)
+
  router.post('/signin',signinroute)
 
- router.get('/',(req,res)=>{
-    res.status(200).json('userroutes')
-})
 
 // router.put('/:id',isAuth,async(req,res)=>{
 //     const userId = req.params.id;

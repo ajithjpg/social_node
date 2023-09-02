@@ -69,17 +69,21 @@ module.exports = {
                     to: userRegisterData.email_id,
                     subject: 'Photogram-Email-Conformation',
                     html: `please click on <a href=${url}>Confirm </a> `
-                },(err,res)=>{
+                },(err,info)=>{
+                    console.log(res)
                     if(err){
                         return err
                     }else{
+                        console.log(info)
                         res.status(200)
-                        res.json({code:0, msg: 'Mail Sent Your Register Mail ID'});
-                        
+                        res.send({code:0, msg: 'Mail Sent Your Register Mail ID'});
                     }
+                      
+                        
+                    
                 })
-               
-               
+
+                
             }
             else {
                 console.log('some error')
@@ -148,10 +152,13 @@ module.exports = {
 
             const { id } = verify(req.params.id, process.env.JWT_SECRET_KEY)
             console.log(id)
-            const { nModified } = await UserModel.update(id)
+            const  nModified  = await UserModel.update(id)
+            console.log(nModified)
             if (nModified == 1) {
                 console.log('Email verify Success')
-                return res.send('Email Verify Success')
+                res.send({
+                    code:0,
+                    message:'Email Verify Success'})
 
             }
 

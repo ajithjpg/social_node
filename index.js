@@ -35,6 +35,7 @@ const transporter = nodemailer.createTransport({
 //middlewares
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 
 //routes
@@ -86,6 +87,7 @@ app.get('/mail', (req, res) => {
 app.get('*', (req, res) => {
   res.status(404).json(`${notfount}`);
 });
+
 // app.use(cors());
 
 

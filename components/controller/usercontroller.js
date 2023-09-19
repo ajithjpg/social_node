@@ -41,7 +41,7 @@ module.exports = {
                 })
             }
 
-            const HashedPassword = await hash(userRegisterData.confirm_password, 10)
+            const HashedPassword = await hash(userRegisterData.password, 10)
             const user = {
                 Name: userRegisterData['name'],
                 Email: userRegisterData.email_id,
@@ -50,7 +50,7 @@ module.exports = {
                 IsVerify: false
             }
             const newuser = await UserModel.create(user)
-            console.log(newuser)
+            // console.log(newuser)
 
             if (newuser.status == 1) {
                 console.log('user register success')
@@ -76,18 +76,14 @@ module.exports = {
                     }else{
                         console.log(info)
                         res.status(200)
-                        res.send({code:0, msg: 'Mail Sent Your Register Mail ID'});
+                        res.send({code:0, message: 'Mail Sent Your Register Mail ID'});
                     }
-                      
-                        
-                    
                 })
-
-                
             }
             else {
                 console.log('some error')
-                return res.send('user not created')
+                return res.send({code:1, message: 'user not created'});
+                
             }
 
         }
@@ -158,12 +154,17 @@ module.exports = {
                 console.log('Email verify Success')
                 res.send({
                     code:0,
-                    message:'Email Verify Success'})
+                    message:'Email Verify Success'
+                })
 
+            }else{
+                res.send({
+                    code:1,
+                    message:'som'
+                })
             }
 
-        }
-        catch (err) {
+        } catch (err) {
             console.log('ddd'+err.message)
         }
 

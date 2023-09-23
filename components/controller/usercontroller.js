@@ -49,6 +49,7 @@ module.exports = {
                 Password: HashedPassword,
                 IsVerify: false
             }
+
             const newuser = await UserModel.create(user)
             // console.log(newuser)
 
@@ -93,7 +94,7 @@ module.exports = {
        
         if (req.body.email_id =='' && req.body.password =='') {
             
-            return res.status(404).send({
+            return res.status(200).send({
                 code:1,
                 message:'invalid credentials'
             })
@@ -101,22 +102,41 @@ module.exports = {
         try {
             const users= await UserModel.signByemail(req.body.email_id)
             
-            const isMatch = await compare(req.body.password, users.result.Password)
-         
+            
             if(users.status == true){
                 const isMatch = await compare(req.body.password, users.result.Password)
                 if(isMatch == true){
                     if(users.result.IsVerify == 1){
-                        return res.send({
-                            code:0,
-                            message: 'login-success',
-                            id: users.result.ID,
-                            name: users.result.Name,
-                            email: users.result.Email,
-                            email_verified: users.result.IsVerify,
-                            token: getToken(users.result.ID,users.result.Name, users.result.Email,users.result.PhoneNumber),
-                           
-                        })
+                       
+
+                        var usertoken = getToken(users.result.ID,users.result.Name, users.result.Email,users.result.PhoneNumber)
+                        var sessiondata = {
+                            "user_id":users.result.Id,
+                            "start_time":new Date(),
+                            "end_time":new Date(),
+                            "ip_address":"111",
+                            "user_agent":"ddd",
+                            // "token":usertoken
+                        }
+
+                        const sessionresult = await UserModel.createSession(sessiondata)
+
+                        if(sessionresult == 1){
+                            return res.send({
+                                code:0,
+                                message: 'login-success',
+                                id: users.result.Id,
+                                name: users.result.Name,
+                                email: users.result.Email,
+                                email_verified: users.result.IsVerify,
+                                token: usertoken,
+                            })
+                        }else{
+                            return res.status(200).send({
+                                'code':1,
+                                "message":"something went wrong"
+                            })
+                        }
                     }else{
                         return res.send({ 
                             code:1,
@@ -147,9 +167,9 @@ module.exports = {
         try {
 
             const { id } = verify(req.params.id, process.env.JWT_SECRET_KEY)
-            console.log(id)
+        
             const  nModified  = await UserModel.update(id)
-            console.log(nModified)
+        
             if (nModified == 1) {
                 console.log('Email verify Success')
                 res.send({
@@ -165,8 +185,10 @@ module.exports = {
             }
 
         } catch (err) {
-            console.log('ddd'+err.message)
+            console.log(err.message)
         }
 
     }
+
+
 }

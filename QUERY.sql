@@ -1,0 +1,71 @@
+
+-- user table
+
+CREATE TABLE `photogrm`.`photogrm_users` (
+    `Id` INT NOT NULL AUTO_INCREMENT , 
+    `Name` VARCHAR(128) NOT NULL , 
+    `Email` VARCHAR(128) NOT NULL ,
+    `PhoneNumber` INT(15) NOT NULL ,
+    `IsVerify` BOOLEAN NOT NULL DEFAULT FALSE ,
+    `Password` VARCHAR(256) NOT NULL ,
+    PRIMARY KEY (`Id`)
+    ) 
+ENGINE = InnoDB; 
+
+-- session table
+
+CREATE TABLE `photogrm`.`photogrm_user_session` (
+    `session_id` INT NOT NULL AUTO_INCREMENT , 
+    `user_id` INT NOT NULL , 
+    `start_time` VARCHAR(45) NOT NULL , 
+    `end_time` VARCHAR(45) NOT NULL , 
+    `ip_address` VARCHAR(45) NOT NULL , 
+    `user_agent` VARCHAR(255) NOT NULL,
+    'token' VARCHAR(128) NOT NULL,
+    PRIMARY KEY (`session_id`) ) 
+ENGINE = InnoDB; 
+
+-- post table
+
+CREATE TABLE `photogrm`.`photogrm_post` (
+    `post_id` INT NOT NULL AUTO_INCREMENT ,
+    `user_id` INT NOT NULL , 
+    `post_text` TEXT NOT NULL ,
+    `img_url`  VARCHAR(128) NOT NULL ,
+    `post_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    PRIMARY KEY (`post_id`)
+) ENGINE = InnoDB; 
+
+-- post_likes table
+
+CREATE TABLE `photogrm`.`post_likes` (
+    `like_id` INT NOT NULL AUTO_INCREMENT ,
+    `post_id` INT NOT NULL ,
+    `user_id` INT NOT NULL ,
+    `isLike`  BOOLEAN NOT NULL DEFAULT FALSE ,
+    `like_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+     PRIMARY KEY (`like_id`)
+) ENGINE = InnoDB; 
+
+-- post_comments TABLE
+
+CREATE TABLE `photogrm`.`post_comments` (
+    `comment_id` INT NOT NULL AUTO_INCREMENT ,
+    `post_id` INT NOT NULL ,
+    `user_id` INT NOT NULL ,
+    `comment_text` TEXT NOT NULL ,
+    `comment_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+     PRIMARY KEY (`comment_id`)
+) ENGINE = InnoDB; 
+
+-- user messages table
+
+CREATE TABLE `photogrm`.`user_messages` (
+    `message_id` INT NOT NULL AUTO_INCREMENT ,
+    `sender_id` INT NOT NULL ,
+    `recipient_id` INT NOT NULL ,
+    `message_text` TEXT NOT NULL ,
+    `message_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `is_read` BOOLEAN NOT NULL DEFAULT FALSE ,
+     PRIMARY KEY (`message_id`)
+) ENGINE = InnoDB; 

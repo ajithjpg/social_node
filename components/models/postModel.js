@@ -94,6 +94,7 @@ module.exports = {
             })
         })
     },
+    
     async addcommend(datas) {
         return new Promise((resolve, reject) => {
             sql.query('INSERT INTO post_comments SET ?', datas, (err, res) => {

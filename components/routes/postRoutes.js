@@ -268,4 +268,11 @@ router.get('/images/:id', async (req, res) => {
 
 })
 
+router.get('/all/:id', async (req, res,next) => {
+
+  
+
+})
+
+
 module.exports = router

@@ -3,6 +3,7 @@ const express = require("express");
 const userRoutes = require('./components/routes/UserRoutes')
 const postRoutes = require('./components/routes/postRoutes')
 const messageRouter = require('./components/routes/messageRoutes')
+const ProfileRouter = require('./components/routes/profileRoutes')
 const app = express();
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -45,7 +46,9 @@ app.use(express.json());
 // app.use('/task', task);
 app.use('/users', userRoutes);
 app.use('/posts',postRoutes);
-app.use('/message',messageRouter)
+app.use('/message',messageRouter);
+app.use('/getprofile',ProfileRouter);
+
 
 
 

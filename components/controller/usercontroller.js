@@ -7,7 +7,7 @@
 
 // import { EMAIL, PASSWORD, JWT_SECRET_KEY } from '../config'
 // import { transport } from '../emailService'
- const {getToken} = require('../validator')
+const { getToken } = require('../validator')
 const nodemailer = require('nodemailer')
 require("dotenv").config()
 const { sign, verify } = require('jsonwebtoken')
@@ -65,65 +65,68 @@ module.exports = {
                 console.log(accessToken)
 
                 const url = `http://localhost:8080/users/emailconfirm/${accessToken}`;
+
                
-                transport.sendMail({
-                    to: userRegisterData.email_id,
-                    subject: 'Photogram-Email-Conformation',
-                    html: `please click on <a href=${url}>Confirm </a> `
-                },(err,info)=>{
-                    console.log(res)
-                    if(err){
-                        return err
-                    }else{
-                        console.log(info)
-                        res.status(200)
-                        res.send({code:0, message: 'Mail Sent Your Register Mail ID'});
-                    }
-                })
+                res.status(200)
+                res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:url });
+                // transport.sendMail({
+                //     to: userRegisterData.email_id,
+                //     subject: 'Photogram-Email-Conformation',
+                //     html: `please click on <a href=${url}>Confirm </a> `
+                // }, (err, info) => {
+                //     console.log(res)
+                //     if (err) {
+                //         return err
+                //     } else {
+                //         console.log(info)
+                //         res.status(200)
+                //         res.send({ code: 0, message: 'Mail Sent Your Register Mail ID' });
+                //     }
+                // })
             }
             else {
                 console.log('some error')
-                return res.send({code:1, message: 'user not created'});
-                
+                return res.send({ code: 1, message: 'user not created' });
+
             }
 
         }
     },
     //########################################+++sign-in+++#############################################################################
     async signinroute(req, res) {
-       
-        if (req.body.email_id =='' && req.body.password =='') {
-            
+
+        if (req.body.email_id == '' && req.body.password == '') {
+
             return res.status(200).send({
-                code:1,
-                message:'invalid credentials'
+                code: 1,
+                message: 'invalid credentials'
             })
         }
         try {
-            const users= await UserModel.signByemail(req.body.email_id)
-            
-            
-            if(users.status == true){
-                const isMatch = await compare(req.body.password, users.result.Password)
-                if(isMatch == true){
-                    if(users.result.IsVerify == 1){
-                       
+            const users = await UserModel.signByemail(req.body.email_id)
 
-                        var usertoken = getToken(users.result.ID,users.result.Name, users.result.Email,users.result.PhoneNumber)
+
+            if (users.status == true) {
+                const isMatch = await compare(req.body.password, users.result.Password)
+                if (isMatch == true) {
+                    if (users.result.IsVerify == 1) {
+
+
+                        var usertoken = getToken(users.result.ID, users.result.Name, users.result.Email, users.result.PhoneNumber)
                         var sessiondata = {
-                            "user_id":users.result.Id,
-                            "start_time":new Date(),
-                            "end_time":new Date(),
-                            "ip_address":"111",
-                            "user_agent":"ddd",
+                            "user_id": users.result.Id,
+                            "start_time": new Date(),
+                            "end_time": new Date(),
+                            "ip_address": "111",
+                            "user_agent": "ddd",
                             // "token":usertoken
                         }
 
                         const sessionresult = await UserModel.createSession(sessiondata)
 
-                        if(sessionresult == 1){
+                        if (sessionresult == 1) {
                             return res.send({
-                                code:0,
+                                code: 0,
                                 message: 'login-success',
                                 id: users.result.Id,
                                 name: users.result.Name,
@@ -131,31 +134,31 @@ module.exports = {
                                 email_verified: users.result.IsVerify,
                                 token: usertoken,
                             })
-                        }else{
+                        } else {
                             return res.status(200).send({
-                                'code':1,
-                                "message":"something went wrong"
+                                'code': 1,
+                                "message": "something went wrong"
                             })
                         }
-                    }else{
-                        return res.send({ 
-                            code:1,
-                            message: 'email not confirmed' 
+                    } else {
+                        return res.send({
+                            code: 1,
+                            message: 'email not confirmed'
                         })
                     }
-                }else{
-                    return res.send({ 
-                        code:1,
-                        message: 'Invalid Credentials' 
+                } else {
+                    return res.send({
+                        code: 1,
+                        message: 'Invalid Credentials'
                     })
                 }
-            }else{
-                return res.send({ 
-                    code:1,
-                    message: 'Invalid email' 
+            } else {
+                return res.send({
+                    code: 1,
+                    message: 'Invalid email'
                 })
             }
-           
+
 
         } catch (error) {
             return res.status(404).send({ message: error.message })
@@ -163,26 +166,65 @@ module.exports = {
     },
     //########################################   EMAIL VARIFICATION    ##############################################
     async EmailVerification(req, res) {
-        
+
         try {
 
             const { id } = verify(req.params.id, process.env.JWT_SECRET_KEY)
-        
-            const  nModified  = await UserModel.update(id)
-        
-            if (nModified == 1) {
-                console.log('Email verify Success')
-                res.send({
-                    code:0,
-                    message:'Email Verify Success'
-                })
 
-            }else{
-                res.send({
-                    code:1,
-                    message:'som'
+            const id_check = await UserModel.checkuserId(id);
+            if (id_check.access == 1) {
+                if (id_check['response']['IsVerify'] == 0) {
+                    const nModified = await UserModel.update(id)
+
+                    if (nModified == 1) {
+
+                        var default_img ='http://localhost:8080/posts/images/default.jpg';
+                        var datas = {
+                            "username":id_check.response['Name'],
+                            "Email":id_check.response['Email'],
+                            "full_name":id_check.response['Name'],
+                            "bio":"",
+                            "profile_picture_url":default_img,
+                            "created_at":new Date(),
+                            "last_login":new Date(),
+                        }
+
+                        const profilests = await UserModel.createprofile(datas)
+                        if (profilests == 1) {
+                            console.log('Email verify Success')
+                            res.status(200).send({
+                                code: 0,
+                                message: 'Email Verify Success'
+                            })
+
+                        } else {
+                            return res.status(200).send({
+                                code: 1,
+                                message: 'some thing went wrong'
+                            })
+                        }
+
+                    } else {
+                        res.send({
+                            code: 1,
+                            message: 'some thing went wrong'
+                        })
+                    }
+                } else {
+                    return res.status(200).send({
+                        code: 1,
+                        message: 'Already verified'
+                    })
+                }
+
+
+            } else {
+                return res.status(200).send({
+                    code: 1,
+                    message: 'Invalid User Id'
                 })
             }
+
 
         } catch (err) {
             console.log(err.message)

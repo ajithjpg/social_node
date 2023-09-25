@@ -12,6 +12,7 @@ module.exports.findByemail = (email) => {
     });
   });
 }
+
 module.exports.create = (newUser) => {
   return new Promise((resolve, reject) => {
     sql.query("INSERT INTO photogrm_users SET ?", newUser, (err, res) => {
@@ -83,4 +84,45 @@ module.exports.createSession = (User) => {
     });
   })
 
+}
+module.exports.checkuserId = (id) =>{
+
+  return new Promise((resolve, reject) => {
+      sql.query(`select * from photogrm_users WHERE Id = '${id}'`, (err, res) => {
+          if (err) {
+              reject(err);
+          } else {
+              console.log(res.length)
+
+              if (res.length == 1) {
+                response = {
+                  "access" :1,
+                  "response":res[0]
+                }
+               
+              } else {
+                response = {
+                  "access" :0,
+                  "response":[]
+                }
+                  
+              }
+              resolve(response);
+
+          }
+      })
+  })
+
+}
+
+module.exports.createprofile = (data) =>{
+  return new Promise((resolve, reject) => {
+    sql.query("INSERT INTO photogram_profile SET ?",data,(err,res)=>{
+      if(err){
+        reject(err)
+      }else{
+        resolve(1)
+      }
+    })
+  })
 }

@@ -69,3 +69,29 @@ CREATE TABLE `photogrm`.`user_messages` (
     `is_read` BOOLEAN NOT NULL DEFAULT FALSE ,
      PRIMARY KEY (`message_id`)
 ) ENGINE = InnoDB; 
+
+
+-- follow table
+
+CREATE TABLE `photogrm`.`photogram_followers` (
+    `Id` INT NOT NULL AUTO_INCREMENT , 
+    `follower_id` INT NOT NULL ,
+    `following_id` INT NOT NULL ,
+    `follow_date` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+     PRIMARY KEY (`Id`)
+) ENGINE = InnoDB; 
+
+
+--profile table
+
+CREATE TABLE `photogrm`.`photogram_profile` (
+    `Id` INT NOT NULL AUTO_INCREMENT ,
+    `username` VARCHAR(255) NOT NULL ,
+    `Email` VARCHAR(255) NOT NULL ,
+    `full_name` VARCHAR(255) NOT NULL ,
+    `bio` TEXT NOT NULL ,
+    `profile_picture_url` VARCHAR(255) NOT NULL ,
+    `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    `last_login` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+    PRIMARY KEY (`Id`)
+) ENGINE = InnoDB; 

@@ -118,7 +118,7 @@ module.exports = {
                             "start_time": new Date(),
                             "end_time": new Date(),
                             "ip_address": "111",
-                            "user_agent": "ddd",
+                            "user_agent": req.body.user_agent,
                             // "token":usertoken
                         }
 
@@ -180,6 +180,7 @@ module.exports = {
 
                         var default_img ='http://localhost:8080/posts/images/default.jpg';
                         var datas = {
+                            "User_Id":id_check.response['Id'],
                             "username":id_check.response['Name'],
                             "Email":id_check.response['Email'],
                             "full_name":id_check.response['Name'],

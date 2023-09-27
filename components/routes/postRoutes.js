@@ -2,7 +2,7 @@ const express = require('express')
 const router = express.Router({ mergeParams: true })
 const multer = require('multer')
 var MD5 = require("crypto-js/md5");
-const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, addcommend } = require('../models/postModel')
+const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, addcommend,getpost } = require('../models/postModel')
 var path = require('path');
 var fs = require('fs');
 
@@ -269,8 +269,12 @@ router.get('/images/:id', async (req, res) => {
 })
 
 router.get('/all/:id', async (req, res,next) => {
-
-  
+const posts  = await getpost(req.params.id)
+  return res.send({
+    'code': 0,
+    "message": "Invalid User Id",
+    "data":posts
+  })
 
 })
 

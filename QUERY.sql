@@ -5,7 +5,7 @@ CREATE TABLE `photogrm`.`photogrm_users` (
     `Id` INT NOT NULL AUTO_INCREMENT , 
     `Name` VARCHAR(128) NOT NULL , 
     `Email` VARCHAR(128) NOT NULL ,
-    `PhoneNumber` INT(15) NOT NULL ,
+    `PhoneNumber` VARCHAR(15) NOT NULL ,
     `IsVerify` BOOLEAN NOT NULL DEFAULT FALSE ,
     `Password` VARCHAR(256) NOT NULL ,
     PRIMARY KEY (`Id`)
@@ -86,6 +86,7 @@ CREATE TABLE `photogrm`.`photogram_followers` (
 
 CREATE TABLE `photogrm`.`photogram_profile` (
     `Id` INT NOT NULL AUTO_INCREMENT ,
+    `User_Id`INT NOT NULL,
     `username` VARCHAR(255) NOT NULL ,
     `Email` VARCHAR(255) NOT NULL ,
     `full_name` VARCHAR(255) NOT NULL ,

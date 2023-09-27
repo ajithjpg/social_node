@@ -94,7 +94,7 @@ module.exports = {
             })
         })
     },
-    
+
     async addcommend(datas) {
         return new Promise((resolve, reject) => {
             sql.query('INSERT INTO post_comments SET ?', datas, (err, res) => {
@@ -105,6 +105,52 @@ module.exports = {
                 }
             })
         })
-    }
+    },
+
+    async getpost(userid) {
+        return new Promise((resolve, reject) => {
+            // sql.query(`SELECT * FROM  photogrm_post WHERE user_id ='${userid}' UNION ALL
+            // SELECT *
+            // FROM photogrm_post
+            // WHERE user_id IN (
+            //     SELECT following_id
+            //     FROM photogram_followers
+            //     WHERE follower_id = '${userid}'
+            // )`, (err, res) => {
+            //     if (err) {
+            //         reject(err)
+            //     } else {
+            //         console.log(res)
+            //         resolve(res)
+            //     }
+            // })
+
+            sql.query(`SELECT photogrm_post.*,
+            photogram_profile.full_name AS user_full_name,
+            photogram_profile.profile_picture_url AS user_profile_image_url,
+            COUNT(DISTINCT post_likes.like_id) AS likes,
+            GROUP_CONCAT(DISTINCT post_comments.comment_text ORDER BY post_comments.comment_date ASC SEPARATOR '|') AS comments
+            FROM photogrm_post
+
+            LEFT JOIN post_likes ON photogrm_post.post_id = post_likes.post_id
+            LEFT JOIN post_comments ON photogrm_post.post_id = post_comments.post_id
+            INNER JOIN photogram_profile ON photogrm_post.user_id = photogram_profile.user_id
+            WHERE photogrm_post.user_id = '${userid}'
+
+                OR photogrm_post.user_id IN (
+                SELECT following_id FROM photogram_followers
+                WHERE follower_id = '${userid}'
+                )
+            GROUP BY photogrm_post.post_id
+            ORDER BY photogrm_post.post_date DESC`, (err, res) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(res)
+                }
+            })
+        })
+    },
+
 
 }

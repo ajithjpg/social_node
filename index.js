@@ -48,6 +48,7 @@ app.use('/users', userRoutes);
 app.use('/posts',postRoutes);
 app.use('/message',messageRouter);
 app.use('/getprofile',ProfileRouter);
+app.use('/profile',ProfileRouter);
 
 
 

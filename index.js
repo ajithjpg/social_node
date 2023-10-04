@@ -49,6 +49,7 @@ app.use('/posts',postRoutes);
 app.use('/message',messageRouter);
 app.use('/getprofile',ProfileRouter);
 app.use('/profile',ProfileRouter);
+app.use('/editprofile',postRoutes);
 
 
 

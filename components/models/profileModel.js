@@ -20,7 +20,7 @@ module.exports = {
                 if (err) {
                     reject(err)
                 } else {
-                  
+
                     resolve(res)
                 }
             })
@@ -46,7 +46,7 @@ module.exports = {
         })
 
     },
-    
+
     async getfollowers(id) {
 
         return new Promise((resolve, reject) => {
@@ -54,9 +54,9 @@ module.exports = {
                 if (err) {
                     reject(err);
                 } else {
-                   
+
                     resolve(res.length);
-                   
+
                 }
             })
         })
@@ -76,5 +76,17 @@ module.exports = {
 
     },
 
-    
+    async updateProfile(data, id) {
+       return new Promise((resolve, reject) => {
+            sql.query(`UPDATE photogram_profile SET profile_picture_url = '${data.image_url}',bio ='${data.bio}',full_name = '${data.Name}',username='${data.username}'  WHERE User_Id = '${id}'`, (err, res) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(1)
+                }
+            })
+        })
+    }
+
+
 }

@@ -4,7 +4,7 @@ const {getprofile,editprofile,updateProfile} = require('../controller/profilecon
 
 
 router.get('/:userId',getprofile);
-router.get('/edit',editprofile);
-router.put('/update',updateProfile)
+router.get('/edit/:userId',editprofile);
+router.post('/update/:id',updateProfile)
 
 module.exports = router

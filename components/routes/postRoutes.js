@@ -279,4 +279,34 @@ const posts  = await getpost(req.params.id)
 })
 
 
+router.post('/images/:id', upload.single('file'), async (req, res, next) => {
+
+  if (req.params.id != 0) {
+    const data = await checkuserId(req.params.id)
+    if (data == 1) {
+        return res.send({
+          'code': 0,
+          "message": "Image Upload Successfully",
+          "imageURL":'http://localhost:8080/posts/images/' + filename,
+        })
+    } else {
+      return res.send({
+        'code': 1,
+        "message": "Invalid User Id"
+      })
+    }
+
+
+
+  } else {
+    return res.send({
+      'code': 1,
+      "message": "some thing went wrong"
+    })
+  }
+
+})
+
+
+
 module.exports = router

@@ -46,6 +46,7 @@ app.use(express.json());
 // app.use('/task', task);
 app.use('/users', userRoutes);
 app.use('/posts',postRoutes);
+app.use('/view_posts',postRoutes);
 app.use('/message',messageRouter);
 app.use('/getprofile',ProfileRouter);
 app.use('/profile',ProfileRouter);

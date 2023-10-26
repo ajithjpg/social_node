@@ -6,7 +6,7 @@ const router = express.Router({mergeParams:true})
 
  router.post('/register',registerroute)
  router.get('/emailconfirm/:id',EmailVerification)
-
+ 
 
  router.post('/signin',signinroute)
 

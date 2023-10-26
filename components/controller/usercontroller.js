@@ -64,25 +64,26 @@ module.exports = {
                 })
                 console.log(accessToken)
 
-                const url = `http://localhost:8080/users/emailconfirm/${accessToken}`;
+                const url = `http://localhost:40308/pages/email_verify/${accessToken}`;
 
                
-                res.status(200)
-                res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:url });
-                // transport.sendMail({
-                //     to: userRegisterData.email_id,
-                //     subject: 'Photogram-Email-Conformation',
-                //     html: `please click on <a href=${url}>Confirm </a> `
-                // }, (err, info) => {
-                //     console.log(res)
-                //     if (err) {
-                //         return err
-                //     } else {
-                //         console.log(info)
-                //         res.status(200)
-                //         res.send({ code: 0, message: 'Mail Sent Your Register Mail ID' });
-                //     }
-                // })
+                // res.status(200)
+                // res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:url });
+                transport.sendMail({
+                   // userRegisterData.email_id
+                    to: 'dillibabuelumalai24@gmail.com',
+                    subject: 'Photogram-Email-Conformation',
+                    html: `please click on <a href=${url}>Confirm </a> `
+                }, (err, info) => {
+                    console.log(res)
+                    if (err) {
+                        return err
+                    } else {
+                        console.log(info)
+                        res.status(200)
+                        res.send({ code: 0, message: 'Mail Sent Your Register Mail ID' });
+                    }
+                })
             }
             else {
                 console.log('some error')

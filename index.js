@@ -51,7 +51,7 @@ app.use('/message',messageRouter);
 app.use('/getprofile',ProfileRouter);
 app.use('/profile',ProfileRouter);
 app.use('/editprofile',postRoutes);
-
+app.use('/user', ProfileRouter);
 
 
 
@@ -68,7 +68,7 @@ app.get('/mail', (req, res) => {
   
   const mailOptions = {
     from: 'ajithjerry@gmail.com',
-    to: 'dilli@trstscore.com',
+    to: 'dillibabuelumalai24@gmail.com',
     subject: 'Test Email',
     text: 'Hello, this is a test email from Nodemailer.'
   };

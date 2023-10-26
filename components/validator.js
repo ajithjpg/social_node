@@ -23,7 +23,7 @@ module.exports.isAuth = (req, res, next) => {
   if (token) {
     const onlyToken = token.slice(6, token.length);
     // console.log('onlyToken:' ,onlyToken)
-    jwt.verify(onlyToken, 'configJWT_SECRET', (err, decode) => {
+    jwt.verify(onlyToken,  process.env.JWT_SECRET_KEY, (err, decode) => {
       if (err) {
         // console.log(err.message)
         return res.status(401).send({ message: 'Invalid Token' });

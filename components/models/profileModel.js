@@ -86,7 +86,18 @@ module.exports = {
                 }
             })
         })
-    }
+    },
 
+    async updatefollow(data){
+        return new Promise((resolve, reject) => {
+            sql.query(`Insert into photogram_followers SET ?`,data, (err, res) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(1)
+                }
+            })
+        })
+    }
 
 }

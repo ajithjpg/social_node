@@ -1,7 +1,7 @@
 
 const { isEmpty } = require('../validator')
 
-const { getprofiledetails, getpostdetails, checkuserId, getfollowers, getfollowing, updateProfile } = require('../models/profileModel')
+const { getprofiledetails, getpostdetails, checkuserId, getfollowers, getfollowing, updateProfile, updatefollow } = require('../models/profileModel')
 
 module.exports = {
     async getprofile(req, res) {
@@ -47,7 +47,7 @@ module.exports = {
             const data = await checkuserId(req.params.id)
             if (data == 1) {
 
-                
+
                 if (req.body.bio != '' && req.body.username != '' && req.body.Name != '' && req.body.image_url != '') {
 
                     var datas = {}
@@ -88,6 +88,53 @@ module.exports = {
                 "message": "some thing went wrong"
             })
         }
-    }
+    },
+    async updatefollow(req, res) {
+        if (req.params.userId != req.params.follow_id) {
+            if (req.params.userId != 0 && req.params.follow_id != 0) {
+                const data = await checkuserId(req.params.userId)
+                if (data == 1) {
+                    const followdata = await checkuserId(req.params.follow_id)
+                    if (followdata == 1) {
+                        var datas = {
+                            'follower_id': req.params.follow_id,
+                            'following_id': req.params.userId,
 
+                        }
+                        var update = await updatefollow(datas)
+
+                        if (update == 1) {
+                            return res.send({
+                                'code': 0,
+                                "message": "following successfully"
+                            })
+                        } else {
+                            return res.send({
+                                'code': 1,
+                                "message": "Invalid User Id3"
+                            })
+                        }
+                    } else {
+                        return res.send({
+                            'code': 1,
+                            "message": "Invalid User Id1"
+                        })
+                    }
+                } else {
+                    return res.send({
+                        'code': 1,
+                        "message": "Invalid User Id2"
+                    })
+                }
+            } else {
+
+            }
+        } else {
+            return res.send({
+                'code': 1,
+                "message": "SomeThing Went Wrong"
+            })
+        }
+
+    }
 }

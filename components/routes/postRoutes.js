@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router({ mergeParams: true })
 const multer = require('multer')
 var MD5 = require("crypto-js/md5");
-const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, addcommend, getpost, explorepost, viewpost,getcomments } = require('../models/postModel')
+const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, addcommend, getpost, explorepost, viewpost,getcomments,checkfollow } = require('../models/postModel')
 var path = require('path');
+var {isAuth} = require('../validator')
 var fs = require('fs');
 
 // console.log(MD5("Message").toString());
@@ -210,8 +211,6 @@ router.post('/commend/:post_id/:user_id', async (req, res, next) => {
             "message": "something went wrong"
           })
         }
-
-
       } else {
         return res.send({
           'code': 1,
@@ -272,11 +271,12 @@ router.get('/all/:id', async (req, res, next) => {
   const posts = await getpost(req.params.id)
   return res.send({
     'code': 0,
-    "message": "Invalid User Id",
+    // "message": "Invalid User Id",
     "data": posts
   })
 
 })
+
 router.get('/allposts', async (req, res) => {
   const posts = await explorepost()
   return res.send({
@@ -317,15 +317,16 @@ router.post('/images/:id', upload.single('file'), async (req, res, next) => {
 
 router.get('/getdata/:id', async (req, res) => {
   var data = await viewpost(req.params.id);
-  var msg = await  getcomments(req.params.id)
+  var msg = await  getcomments(req.params.id);
+  var follows = await checkfollow(10)
+ 
   return res.send({
     'code': 0,
-    "message": "Invalid User Id",
+    "message": 'Success',
     "data": data,
     "comments":msg,
+    "isfollow":follows
   })
 })
-
-
 
 module.exports = router

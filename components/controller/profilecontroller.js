@@ -136,5 +136,53 @@ module.exports = {
             })
         }
 
+    },
+    async updateUnfollow(req, res) {
+        if (req.params.userId != req.params.follow_id) {
+            if (req.params.userId != 0 && req.params.follow_id != 0) {
+                const data = await checkuserId(req.params.userId)
+                if (data == 1) {
+                    const followdata = await checkuserId(req.params.follow_id)
+                    if (followdata == 1) {
+                        var datas = {
+                            'follower_id': req.params.follow_id,
+                            'following_id': req.params.userId,
+
+                        }
+                        var update = await updatefollow(datas)
+
+                        if (update == 1) {
+                            return res.send({
+                                'code': 0,
+                                "message": "following successfully"
+                            })
+                        } else {
+                            return res.send({
+                                'code': 1,
+                                "message": "Invalid User Id3"
+                            })
+                        }
+                    } else {
+                        return res.send({
+                            'code': 1,
+                            "message": "Invalid User Id1"
+                        })
+                    }
+                } else {
+                    return res.send({
+                        'code': 1,
+                        "message": "Invalid User Id2"
+                    })
+                }
+            } else {
+
+            }
+        } else {
+            return res.send({
+                'code': 1,
+                "message": "SomeThing Went Wrong"
+            })
+        }
+
     }
 }

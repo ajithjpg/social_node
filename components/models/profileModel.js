@@ -98,6 +98,18 @@ module.exports = {
                 }
             })
         })
+    },
+
+    async updateUnfollow(data){
+        return new Promise((resolve, reject) => {
+            sql.query(`DELETE FROM photogram_followers WHERE `, (err, res) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(1)
+                }
+            })
+        })
     }
 
 }

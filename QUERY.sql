@@ -96,3 +96,7 @@ CREATE TABLE `photogrm`.`photogram_profile` (
     `last_login` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     PRIMARY KEY (`Id`)
 ) ENGINE = InnoDB; 
+
+
+-- upload changes
+ALTER TABLE `photogrm_post` CHANGE `img_url` `img_url` BLOB NOT NULL; 

@@ -17,6 +17,7 @@ const corsOptions = {
   optionsSuccessStatus: 200
 }
 
+const name = 'dillibabu'
 
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
@@ -69,8 +70,8 @@ app.get('/mail', (req, res) => {
   const mailOptions = {
     from: 'ajithjerry@gmail.com',
     to: 'dillibabuelumalai24@gmail.com',
-    subject: 'Test Email',
-    text: 'Hello, this is a test email from Nodemailer.'
+    subject: 'Verify your email address for photogrm.selfmade.lol',
+    html:{ path: './components/template.html' }
   };
   
   transporter.sendMail(mailOptions, (error, info) => {

@@ -11,7 +11,7 @@ const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
-
+const {welcomeEmail} = require('./components/emailTemplate')
 const corsOptions = {
   "origin": "*",
   optionsSuccessStatus: 200
@@ -42,9 +42,6 @@ app.use(express.json());
 
 //routes
 
-
-// app.use('/project', project);
-// app.use('/task', task);
 app.use('/users', userRoutes);
 app.use('/posts',postRoutes);
 app.use('/view_posts',postRoutes);
@@ -66,12 +63,13 @@ app.get('/', (req, res) => {
 })
 
 app.get('/mail', (req, res) => {
+  const output =  welcomeEmail('Dilli Babu','')
   
   const mailOptions = {
     from: 'ajithjerry@gmail.com',
     to: 'dillibabuelumalai24@gmail.com',
     subject: 'Verify your email address for photogrm.selfmade.lol',
-    html:{ path: './components/template.html' }
+    html:output
   };
   
   transporter.sendMail(mailOptions, (error, info) => {

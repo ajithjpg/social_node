@@ -1,16 +1,25 @@
 
 const { isEmpty } = require('../validator')
 
-const { getprofiledetails, getpostdetails, checkuserId, getfollowers, getfollowing, updateProfile, updatefollow } = require('../models/profileModel')
+const { getprofiledetails,checkfollow,updateUnfollow, getpostdetails, checkuserId, getfollowers,check_following, getfollowing,check_follow,getcurrentuserid, updateProfile, updatefollow } = require('../models/profileModel')
 
 module.exports = {
     async getprofile(req, res) {
         const user_id = await checkuserId(req.params.userId)
+        const current_user_id = await getcurrentuserid(req.headers.authorization)
+       
+        
         if (user_id == 1) {
             const data = await getprofiledetails(req.params.userId);
+            
             data['posts'] = await getpostdetails(req.params.userId);
             data['followers'] = await getfollowers(req.params.userId);
             data['following'] = await getfollowing(req.params.userId);
+          
+           
+            data['isfollow'] = await check_follow(req.params.userId,current_user_id[0]['user_id']);
+            data['isfollowing'] = await check_following(req.params.userId,current_user_id[0]['user_id'])
+          
             return res.status(200).send({
                 code: 0,
                 message: "data",
@@ -101,19 +110,29 @@ module.exports = {
                             'following_id': req.params.userId,
 
                         }
-                        var update = await updatefollow(datas)
+                        var status = await checkfollow(datas)
+                       
+                        if(status == 0){
+                            var update = await updatefollow(datas)
 
-                        if (update == 1) {
-                            return res.send({
-                                'code': 0,
-                                "message": "following successfully"
-                            })
-                        } else {
+                            if (update == 1) {
+                                return res.send({
+                                    'code': 0,
+                                    "message": "following successfully"
+                                })
+                            } else {
+                                return res.send({
+                                    'code': 1,
+                                    "message": "Invalid User Id3"
+                                })
+                            }
+                        }else{
                             return res.send({
                                 'code': 1,
-                                "message": "Invalid User Id3"
+                                "message": "already following"
                             })
                         }
+                        
                     } else {
                         return res.send({
                             'code': 1,
@@ -149,19 +168,28 @@ module.exports = {
                             'following_id': req.params.userId,
 
                         }
-                        var update = await updatefollow(datas)
+                        var status = await checkfollow(datas)
+                        if(status == 1){
+                            var update = await updateUnfollow(req.params.userId,req.params.follow_id,)
 
-                        if (update == 1) {
-                            return res.send({
-                                'code': 0,
-                                "message": "following successfully"
-                            })
-                        } else {
+                            if (update == 1) {
+                                return res.send({
+                                    'code': 0,
+                                    "message": "Unfollowing successfully"
+                                })
+                            } else {
+                                return res.send({
+                                    'code': 1,
+                                    "message": "Invalid User Id3"
+                                })
+                            }
+                        }else{
                             return res.send({
                                 'code': 1,
-                                "message": "Invalid User Id3"
+                                "message": "Something Went Wrong"
                             })
                         }
+                        
                     } else {
                         return res.send({
                             'code': 1,

@@ -32,7 +32,7 @@ const upload = multer({ storage: storage })
 
 // upload.single('file'),
 
-router.post('/upload', async (req, res, next) => {
+router.post('/upload',isAuth, async (req, res, next) => {
 
   if (req.body.user_id != 0 && req.body.post_text != '') {
 
@@ -80,7 +80,7 @@ router.post('/upload', async (req, res, next) => {
 
 })
 
-router.post('/like/:post_id/:user_id', async (req, res, next) => {
+router.post('/like/:post_id/:user_id',isAuth, async (req, res, next) => {
 
 
   const status = await checkPost(req.params.post_id);
@@ -141,7 +141,7 @@ router.post('/like/:post_id/:user_id', async (req, res, next) => {
 
 })
 
-router.post('/dislike/:post_id/:user_id', async (req, res, next) => {
+router.post('/dislike/:post_id/:user_id',isAuth, async (req, res, next) => {
 
 
   const status = await checkPost(req.params.post_id);
@@ -186,7 +186,7 @@ router.post('/dislike/:post_id/:user_id', async (req, res, next) => {
   }
 })
 
-router.post('/commend/:post_id/:user_id', async (req, res, next) => {
+router.post('/commend/:post_id/:user_id',isAuth, async (req, res, next) => {
   if (req.body.comment_text != '') {
     const status = await checkPost(req.params.post_id);
     if (status == 1) {
@@ -267,7 +267,7 @@ router.get('/images/:id', async (req, res) => {
 
 })
 
-router.get('/all/:id', async (req, res, next) => {
+router.get('/all/:id',isAuth, async (req, res, next) => {
   const posts = await getpost(req.params.id)
   return res.send({
     'code': 0,
@@ -277,7 +277,7 @@ router.get('/all/:id', async (req, res, next) => {
 
 })
 
-router.get('/allposts', async (req, res) => {
+router.get('/allposts',isAuth, async (req, res) => {
   const posts = await explorepost()
   return res.send({
     'code': 0,
@@ -287,7 +287,7 @@ router.get('/allposts', async (req, res) => {
 })
 
 
-router.post('/images/:id', upload.single('file'), async (req, res, next) => {
+router.post('/images/:id',isAuth, upload.single('file'), async (req, res, next) => {
 
   if (req.params.id != 0) {
     const data = await checkuserId(req.params.id)
@@ -315,7 +315,7 @@ router.post('/images/:id', upload.single('file'), async (req, res, next) => {
 
 })
 
-router.get('/getdata/:id', async (req, res) => {
+router.get('/getdata/:id',isAuth, async (req, res) => {
   var data = await viewpost(req.params.id);
   var msg = await  getcomments(req.params.id);
   var follows = await checkfollow(10)

@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router({mergeParams:true})
-const {sendmessage} = require('../controller/messagecontroller')
+const { check_participant,getmessages,update_read} = require('../controller/messagecontroller')
 const {isAuth} = require('../validator')
 
-router.get('/',async(req,res)=>{
-res.send('messageRouter')
-})
+router.get('/:userId',isAuth,getmessages)
 
-router.post('/sendMessage',sendmessage)
+router.post('/send/:userId',isAuth,check_participant)
+
+router.get('/update/:userId',isAuth,update_read)
 
 module.exports = router

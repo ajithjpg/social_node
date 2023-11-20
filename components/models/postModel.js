@@ -162,7 +162,7 @@ module.exports = {
             })
         })
     },
-    
+
     async viewpost(id) {
         return new Promise((resolve, reject) => {
             sql.query(`SELECT photogrm_post.*,

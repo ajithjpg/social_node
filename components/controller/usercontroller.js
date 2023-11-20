@@ -120,7 +120,7 @@ module.exports = {
                             "end_time": new Date(),
                             "ip_address": "111",
                             "user_agent": req.body.user_agent,
-                            // "token":usertoken
+                            "token":usertoken
                         }
 
                         const sessionresult = await UserModel.createSession(sessiondata)

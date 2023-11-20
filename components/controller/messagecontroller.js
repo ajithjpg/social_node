@@ -1,71 +1,182 @@
-const { create } = require('../models/messageModel')
+const { create_participant, checkparticipant, createMessage,upadte_read, getMessage } = require('../models/messageModel')
+const { checkuserId } = require("../models/profileModel")
+const { getcurrentId } = require('../models/UserModel')
+
+
 
 module.exports = {
 
-    async sendmessage(req, res) {
+    async check_participant(req, response) {
 
-        console.log(req)
-        const date = new Date();
-        const formatData = (input) => {
-            if (input > 9) {
-                return input;
-            } else return `0${input}`;
-        };
+        if (req.body.message != '') {
 
-        // Function to convert
-        // 24 Hour to 12 Hour clock
-        const formatHour = (input) => {
-            if (input > 12) {
-                return input - 12;
+            const sender_id = await checkuserId(req.params.userId)
+            if (sender_id == 1) {
+                const token = req.headers.authorization;
+                // console.log('mytokek:',token)
+                if (token) {
+                    const onlyToken = token.slice(7, token.length);
+                    const res = await getcurrentId(onlyToken)
+
+                    if (res[0]['user_id'] != 0) {
+                        const data = await checkparticipant(req.params.userId, res[0]['user_id']);
+                        console.log(data)
+                        var create = 0
+                        var insert_id = 0
+                        if (data.length != 0) {
+                            insert_id = data[0]['conversation_id']
+                            create = 1;
+                        } else {
+                            var datas = {
+                                "user1_id": req.params.userId,
+                                "user2_id": res[0]['user_id']
+                            }
+
+                            const status = await create_participant(datas)
+
+                            if (status.insertId != 0 && status.insertId != undefined) {
+                                create = 1;
+                                insert_id = status.insertId
+                            }
+                        }
+
+                        if (create == 1) {
+                            const datas = {
+                                'conversation_id': insert_id,
+                                'sender_id': req.params.userId,
+                                'receiver_id': res[0]['user_id'],
+                                'message': req.body.message,
+                                'read': 0,
+                            }
+
+                            const data = await createMessage(datas);
+
+                            if (data == 1) {
+                                return response.send({
+                                    'code': 0,
+                                    "message": "Message Send Successfully"
+                                })
+                            } else {
+                                return response.send({
+                                    'code': 1,
+                                    "message": "Something Went Wrong"
+                                })
+                            }
+
+                        }
+
+                    }
+                }
+
+            } else {
+                return res.send({
+                    'code': 1,
+                    "message": "Something Went Wrong"
+                })
             }
-            return input;
-        };
 
-        // Data about date
-        const format = {
-            dd: formatData(date.getDate()),
-            mm: formatData(date.getMonth() + 1),
-            yyyy: date.getFullYear(),
-            HH: formatData(date.getHours()),
-            hh: formatData(formatHour(date.getHours())),
-            MM: formatData(date.getMinutes()),
-            SS: formatData(date.getSeconds()),
-        };
-
-        const format12Hour = ({ dd, mm, yyyy, hh, MM, SS }) => {
-            return `${mm}/${dd}/${yyyy} ${hh}:${MM}:${SS}`;
-        };
-
-        // Time in 24 Hour format
-        // Time in 12 Hour format
-        const current_date = format12Hour(format);
-        console.log(current_date)
-
-        const datas = {
-            'SenderID': req.body.SenderID,
-            'ReceiverID': req.body.ReceiverID,
-            'TIME': current_date,
-            'CONTENT': req.body.message,
-            'Status': 0,
-
-        }
-
-        const data = await create(datas);
-        console.log(data)
-        if (data == 1) {
-            res.send({
-                "code": 0,
-                'message': "message send successfully"
-            })
         } else {
-            res.send({
-                "code": 1,
-                'message': "something went wrong"
+            return response.send({
+                'code': 1,
+                "message": "Something Went Wrong"
             })
         }
+    },
 
-        res.send(req.body)
+    async getmessages(req, res) {
+        if (req.params.userId != 0) {
+            const status = await checkuserId(req.params.userId)
+            if (status == 1) {
+                const token = req.headers.authorization;
+                // console.log('mytokek:',token)
+                if (token) {
+                    const onlyToken = token.slice(7, token.length);
+                    const geduserid = await getcurrentId(onlyToken)
 
+                    if (geduserid[0]['user_id'] != 0) {
+                        const data = await checkparticipant(req.params.userId, geduserid[0]['user_id']);
+                       
+                        
+                        if (data.length != 0) {
+                            const insert_id = data[0]['conversation_id'];
+
+                            const datas = await getMessage(insert_id)
+                            console.log(datas)
+                            return res.send({
+                                'code': 1,
+                                "data": datas
+                            })
+                            
+                        } else {
+                            return res.send({
+                                'code': 1,
+                                "data": []
+                            })
+                        }
+                    }
+                }
+            } else {
+                return res.send({
+                    'code': 1,
+                    "message": "Something Went Wrong"
+                })
+            }
+
+        } else {
+            return response.send({
+                'code': 1,
+                "message": "Something Went Wrong"
+            })
+        }
+    },
+
+    async update_read(req,res){
+        if(req.params.userId !=0){
+            const status = await checkuserId(req.params.userId)
+            if (status == 1) {
+                const token = req.headers.authorization;
+                // console.log('mytokek:',token)
+                if (token) {
+                    const onlyToken = token.slice(7, token.length);
+                    const geduserid = await getcurrentId(onlyToken)
+
+                    if (geduserid[0]['user_id'] != 0) {
+                        const data = await checkparticipant(req.params.userId, geduserid[0]['user_id']);
+                       
+                        
+                        if (data.length != 0) {
+                            const insert_id = data[0]['conversation_id'];
+
+                            const datas = await upadte_read(insert_id)
+                            
+                            if(datas == 1){
+                                return res.send({
+                                    'code': 0,
+                                    "data": datas
+                                })
+                            }else{
+                                return res.send({
+                                    'code': 1,
+                                    "data": datas
+                                })
+                            }
+                           
+                            
+                        } else {
+                            return res.send({
+                                'code': 1,
+                                "data": []
+                            })
+                        }
+                    }
+                }
+            } 
+        }
     }
+
+
+
 }
+
+
 

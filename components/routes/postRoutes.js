@@ -32,7 +32,7 @@ const upload = multer({ storage: storage })
 
 // upload.single('file'),
 
-router.post('/upload',isAuth, async (req, res, next) => {
+router.post('/upload',isAuth,upload.single('file'), async (req, res, next) => {
 
   if (req.body.user_id != 0 && req.body.post_text != '') {
 
@@ -41,16 +41,16 @@ router.post('/upload',isAuth, async (req, res, next) => {
     console.log(req.body)
 
     if (data == 1) {
-
+//req.body.file
       var datas = {
         "user_id": req.body.user_id,
         "post_text": req.body.post_text,
         "post_date": new Date(),
-        "img_url": req.body.file,
+        "img_url": 'http://localhost:8080/posts/images/' + filename,
       }
 
       const result = await createpost(datas);
-      console.log(result)
+     
       if (result == 1) {
         return res.send({
           'code': 0,

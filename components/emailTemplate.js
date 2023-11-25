@@ -160,7 +160,7 @@ const welcomeEmail = (clientName, token) => `<!DOCTYPE html>
        <p class="content">Sincerely,<br/>Team Photobook</p>
        <p class="content"></p>
       
-        <a href="£" class="button">Verify Email</a>
+        <a href="${token}" class="button">Verify Email</a>
 
       </div>
     </div>

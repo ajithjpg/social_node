@@ -49,14 +49,14 @@ module.exports = {
             photogram_profile.full_name AS user_full_name,
             photogram_profile.profile_picture_url AS user_profile_image_url
             FROM message_history 
-            INNER JOIN photogram_profile ON message_history.sender_id  = photogram_profile.user_id OR message_history.receiver_id   = photogram_profile.user_id
+            INNER JOIN photogram_profile ON message_history.sender_id  = photogram_profile.user_id 
             WHERE message_history.conversation_id = '${conversation_id}'`, (err, res) => {
                 if (err) {
                     console.log("error: ", err);
                     // result(err, null);
                     reject(err);
                 } else {
-
+                    console.log(res.length)
                     resolve(res);
                 }
             });
@@ -74,6 +74,22 @@ module.exports = {
             })
         })
 
-    }
+    },
+
+    async getchatListMessage(ID) {
+
+        return new Promise((resolve, reject) => {
+            sql.query(`SELECT * FROM user_conversation  WHERE user1_id = '${ID}' OR user2_id = '${ID}'`, (err, res) => {
+                if (err) {
+                    console.log("error: ", err);
+                    // result(err, null);
+                    reject(err);
+                } else {
+                    console.log(res.length+'ssss')
+                    resolve(res);
+                }
+            });
+        })
+    },
 
 }

@@ -149,7 +149,7 @@ module.exports = {
         const onlyToken = token.slice(7, token.length);
 
         return new Promise((resolve, reject) => {
-            sql.query(`SELECT * FROM photogrm_user_session WHERE token = '${onlyToken}' `, (err, res) => {
+            sql.query(`SELECT * FROM photogrm_user_session WHERE token='${onlyToken}'`, (err, res) => {
                 if (err) {
                     reject(err)
                 }

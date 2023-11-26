@@ -21,7 +21,7 @@ CREATE TABLE `photogrm`.`photogrm_user_session` (
     `end_time` VARCHAR(45) NOT NULL , 
     `ip_address` VARCHAR(45) NOT NULL , 
     `user_agent` VARCHAR(255) NOT NULL,
-    'token' VARCHAR(128) NOT NULL,
+    `token` VARCHAR(128) NOT NULL,
     PRIMARY KEY (`session_id`) ) 
 ENGINE = InnoDB; 
 

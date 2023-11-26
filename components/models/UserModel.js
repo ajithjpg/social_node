@@ -20,10 +20,10 @@ module.exports.create = (newUser) => {
         console.log("error: ", err);
         reject(err);
       } else {
-          response ={
-            "Id":res.insertId,
-            "status":1
-          }
+        response = {
+          "Id": res.insertId,
+          "status": 1
+        }
         resolve(response);
       }
     });
@@ -38,7 +38,7 @@ module.exports.update = (id) => {
         // result(err, null);
         reject(err);
       } else {
-          
+
         resolve(1);
       }
     });
@@ -52,20 +52,20 @@ module.exports.signByemail = (email) => {
       if (err) {
         reject(err);
       } else {
-        if(results.length ==0){
+        if (results.length == 0) {
           var res = {
-            status:false,
-            result:[]
+            status: false,
+            result: []
           }
-       
-        }else{
+
+        } else {
           var res = {
-            status:true,
-            result:results[0]
+            status: true,
+            result: results[0]
           }
         }
         resolve(res);
-        
+
       }
     });
   });
@@ -78,51 +78,65 @@ module.exports.createSession = (User) => {
         // result(err, null);
         reject(err);
       } else {
-          response = 1
+        response = 1
         resolve(response);
       }
     });
   })
 
 }
-module.exports.checkuserId = (id) =>{
+module.exports.checkuserId = (id) => {
 
   return new Promise((resolve, reject) => {
-      sql.query(`select * from photogrm_users WHERE Id = '${id}'`, (err, res) => {
-          if (err) {
-              reject(err);
-          } else {
-              console.log(res.length)
+    sql.query(`select * from photogrm_users WHERE Id = '${id}'`, (err, res) => {
+      if (err) {
+        reject(err);
+      } else {
+        console.log(res.length)
 
-              if (res.length == 1) {
-                response = {
-                  "access" :1,
-                  "response":res[0]
-                }
-               
-              } else {
-                response = {
-                  "access" :0,
-                  "response":[]
-                }
-                  
-              }
-              resolve(response);
-
+        if (res.length == 1) {
+          response = {
+            "access": 1,
+            "response": res[0]
           }
-      })
+
+        } else {
+          response = {
+            "access": 0,
+            "response": []
+          }
+
+        }
+        resolve(response);
+
+      }
+    })
   })
 
 }
 
-module.exports.createprofile = (data) =>{
+module.exports.createprofile = (data) => {
   return new Promise((resolve, reject) => {
-    sql.query("INSERT INTO photogram_profile SET ?",data,(err,res)=>{
-      if(err){
+    sql.query("INSERT INTO photogram_profile SET ?", data, (err, res) => {
+      if (err) {
         reject(err)
-      }else{
+      } else {
         resolve(1)
       }
     })
   })
+}
+
+module.exports.getcurrentId = (token) => {
+  return new Promise((resolve, reject) => {
+    sql.query(`SELECT * FROM photogrm_user_session WHERE token = '${token}'`, (err, res) => {
+      if (err) {
+        reject(err)
+      }else{
+        
+        resolve(res)
+      }
+    })
+  })
+
 }

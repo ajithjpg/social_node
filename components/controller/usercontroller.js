@@ -14,7 +14,7 @@ const { sign, verify } = require('jsonwebtoken')
 const { hash, compare } = require('bcrypt')
 const UserModel = require('../models/UserModel');
 const { isEmpty } = require('../validator')
-
+const {welcomeEmail} = require('../emailTemplate')
 const transport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -34,7 +34,7 @@ module.exports = {
         } else {
             var userExist = await UserModel.findByemail(userRegisterData.email_id)
             if (userExist == 1) {
-                console.log('User Already Registered here')
+
                 return res.send({
                     'code': 1,
                     'message': 'User Already Registered here',
@@ -51,7 +51,7 @@ module.exports = {
             }
 
             const newuser = await UserModel.create(user)
-            // console.log(newuser)
+      
 
             if (newuser.status == 1) {
                 console.log('user register success')
@@ -64,25 +64,26 @@ module.exports = {
                 })
                 console.log(accessToken)
 
-                const url = `http://localhost:8080/users/emailconfirm/${accessToken}`;
+                const url = `http://localhost:51397/pages/email_verify/${accessToken}`;
 
-               
-                res.status(200)
-                res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:url });
-                // transport.sendMail({
-                //     to: userRegisterData.email_id,
-                //     subject: 'Photogram-Email-Conformation',
-                //     html: `please click on <a href=${url}>Confirm </a> `
-                // }, (err, info) => {
-                //     console.log(res)
-                //     if (err) {
-                //         return err
-                //     } else {
-                //         console.log(info)
-                //         res.status(200)
-                //         res.send({ code: 0, message: 'Mail Sent Your Register Mail ID' });
-                //     }
-                // })
+                const output =  welcomeEmail(userRegisterData['name'],url)
+                // res.status(200)
+                // res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:url });
+                transport.sendMail({
+                   // userRegisterData.email_id
+                    to: userRegisterData.email_id,
+                    subject: 'Photogram-Email-Conformation',
+                    html: output
+                }, (err, info) => {
+                    console.log(res)
+                    if (err) {
+                        return err
+                    } else {
+                        console.log(info)
+                        res.status(200)
+                        res.send({ code: 0, message: 'Mail Sent Your Register Mail ID' });
+                    }
+                })
             }
             else {
                 console.log('some error')
@@ -119,7 +120,7 @@ module.exports = {
                             "end_time": new Date(),
                             "ip_address": "111",
                             "user_agent": req.body.user_agent,
-                            // "token":usertoken
+                            "token":usertoken
                         }
 
                         const sessionresult = await UserModel.createSession(sessiondata)

@@ -2,8 +2,9 @@ const express = require('express')
 const router = express.Router({ mergeParams: true })
 const multer = require('multer')
 var MD5 = require("crypto-js/md5");
-const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, addcommend,getpost } = require('../models/postModel')
+const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, addcommend, getpost, explorepost, viewpost,getcomments,checkfollow } = require('../models/postModel')
 var path = require('path');
+var {isAuth} = require('../validator')
 var fs = require('fs');
 
 // console.log(MD5("Message").toString());
@@ -29,27 +30,27 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+// upload.single('file'),
 
-
-router.post('/upload', upload.single('file'), async (req, res, next) => {
+router.post('/upload',isAuth, async (req, res, next) => {
 
   if (req.body.user_id != 0 && req.body.post_text != '') {
 
-
+    
     const data = await checkuserId(req.body.user_id)
-    console.log(data)
+    console.log(req.body)
 
     if (data == 1) {
-
+//req.body.file      'http://localhost:8080/posts/images/' + filename
       var datas = {
         "user_id": req.body.user_id,
         "post_text": req.body.post_text,
         "post_date": new Date(),
-        "img_url": 'http://localhost:8080/posts/images/' + filename,
+        "img_url": req.body.file,
       }
 
       const result = await createpost(datas);
-      console.log(result)
+     
       if (result == 1) {
         return res.send({
           'code': 0,
@@ -79,7 +80,7 @@ router.post('/upload', upload.single('file'), async (req, res, next) => {
 
 })
 
-router.post('/like/:post_id/:user_id', async (req, res, next) => {
+router.post('/like/:post_id/:user_id',isAuth, async (req, res, next) => {
 
 
   const status = await checkPost(req.params.post_id);
@@ -140,7 +141,7 @@ router.post('/like/:post_id/:user_id', async (req, res, next) => {
 
 })
 
-router.post('/dislike/:post_id/:user_id', async (req, res, next) => {
+router.post('/dislike/:post_id/:user_id',isAuth, async (req, res, next) => {
 
 
   const status = await checkPost(req.params.post_id);
@@ -185,7 +186,7 @@ router.post('/dislike/:post_id/:user_id', async (req, res, next) => {
   }
 })
 
-router.post('/commend/:post_id/:user_id', upload.single('post'), async (req, res, next) => {
+router.post('/commend/:post_id/:user_id',isAuth, async (req, res, next) => {
   if (req.body.comment_text != '') {
     const status = await checkPost(req.params.post_id);
     if (status == 1) {
@@ -210,8 +211,6 @@ router.post('/commend/:post_id/:user_id', upload.single('post'), async (req, res
             "message": "something went wrong"
           })
         }
-
-
       } else {
         return res.send({
           'code': 1,
@@ -268,27 +267,36 @@ router.get('/images/:id', async (req, res) => {
 
 })
 
-router.get('/all/:id', async (req, res,next) => {
-const posts  = await getpost(req.params.id)
+router.get('/all/:id',isAuth, async (req, res, next) => {
+  const posts = await getpost(req.params.id)
   return res.send({
     'code': 0,
-    "message": "Invalid User Id",
-    "data":posts
+    // "message": "Invalid User Id",
+    "data": posts
   })
 
 })
 
+router.get('/allposts',isAuth, async (req, res) => {
+  const posts = await explorepost()
+  return res.send({
+    'code': 0,
+    "message": "Invalid User Id",
+    "data": posts
+  })
+})
 
-router.post('/images/:id', upload.single('file'), async (req, res, next) => {
+
+router.post('/images/:id',isAuth, upload.single('file'), async (req, res, next) => {
 
   if (req.params.id != 0) {
     const data = await checkuserId(req.params.id)
     if (data == 1) {
-        return res.send({
-          'code': 0,
-          "message": "Image Upload Successfully",
-          "imageURL":'http://localhost:8080/posts/images/' + filename,
-        })
+      return res.send({
+        'code': 0,
+        "message": "Image Upload Successfully",
+        "imageURL": 'http://localhost:8080/posts/images/' + filename,
+      })
     } else {
       return res.send({
         'code': 1,
@@ -307,6 +315,18 @@ router.post('/images/:id', upload.single('file'), async (req, res, next) => {
 
 })
 
-
+router.get('/getdata/:id',isAuth, async (req, res) => {
+  var data = await viewpost(req.params.id);
+  var msg = await  getcomments(req.params.id);
+  var follows = await checkfollow(10)
+ 
+  return res.send({
+    'code': 0,
+    "message": 'Success',
+    "data": data,
+    "comments":msg,
+    "isfollow":follows
+  })
+})
 
 module.exports = router

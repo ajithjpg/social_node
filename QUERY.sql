@@ -96,3 +96,35 @@ CREATE TABLE `photogrm`.`photogram_profile` (
     `last_login` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
     PRIMARY KEY (`Id`)
 ) ENGINE = InnoDB; 
+
+
+-- upload changes
+ALTER TABLE `photogrm_post` CHANGE `img_url` `img_url` BLOB NOT NULL; 
+
+--session alter
+
+ALTER TABLE `photogrm_user_session` ADD `token` VARCHAR(256) NOT NULL AFTER `user_agent`; 
+
+
+--conversation message
+
+CREATE TABLE `photogrm`.`user_conversation`(
+    `conversation_id` INT NULL AUTO_INCREMENT,
+    `user1_id` INT NOT NULL,
+    `user2_id` INT NOT NULL,
+    PRIMARY KEY(`conversation_id`)
+) ENGINE = InnoDB;
+
+
+--message history
+
+CREATE TABLE `photogrm`.`message_history`(
+    `Id` INT NULL AUTO_INCREMENT,
+    `conversation_id` INT NOT NULL,
+    `sender_id` INT NOT NULL,
+    `receiver_id` INT NOT NULL,
+    `message` TEXT NOT NULL,
+    `date_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `read` INT NOT NULL,
+    PRIMARY KEY(`Id`)
+) ENGINE = InnoDB;

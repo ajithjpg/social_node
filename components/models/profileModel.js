@@ -156,6 +156,20 @@ module.exports = {
                 resolve(res)
             })
         })
+    },
+
+    async getprofile_img(id){
+        return new Promise((resolve, reject) => {
+            sql.query(`SELECT * FROM photogram_profile WHERE User_Id = '${id}'`, (err,res)=>{
+                if(err){
+                    reject(err);
+                }
+                if(res.length !=0){
+                    resolve(res)
+                }
+                
+            })
+        })
     }
 
 

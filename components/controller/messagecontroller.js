@@ -1,5 +1,5 @@
 const { create_participant, checkparticipant, createMessage, upadte_read, getMessage, getchatListMessage } = require('../models/messageModel')
-const { checkuserId } = require("../models/profileModel")
+const { checkuserId , getprofile_img } = require("../models/profileModel")
 const { getcurrentId } = require('../models/UserModel')
 
 
@@ -187,6 +187,17 @@ module.exports = {
             if (geduserid[0]['user_id'] != 0) {
                 const data = await getchatListMessage(geduserid[0]['user_id']);
                 if (data.length != 0) {
+                    for (let i = 0; i < data.length; i++) {
+                        if(data[i]['user1_id'] != geduserid[0]['user_id']){
+                            const datas = await getprofile_img(data[i]['user1_id']);
+                            data[i]['user_profile'] = datas[0]['profile_picture_url'];
+                            data[i]['name'] = datas[0]['full_name'];
+                        }else if(data[i]['user2_id'] != geduserid[0]['user_id']){
+                            const datas = await getprofile_img(data[i]['user2_id']);
+                            data[i]['user_profile'] = datas[0]['profile_picture_url'];
+                            data[i]['name'] = datas[0]['full_name'];
+                        }
+                    }
 
                     return res.send({
                         'code': 0,

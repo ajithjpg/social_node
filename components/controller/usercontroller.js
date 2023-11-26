@@ -63,8 +63,10 @@ module.exports = {
                     expiresIn: '1h'
                 })
                 console.log(accessToken)
+                // client_url
+                // const url = `http://localhost:51397/pages/email_verify/${accessToken}`;
 
-                const url = `http://localhost:51397/pages/email_verify/${accessToken}`;
+                const liveurl =  process.env.client_url+'/pages/email_verify/${accessToken}'
 
                 const output =  welcomeEmail(userRegisterData['name'],url)
                 // res.status(200)

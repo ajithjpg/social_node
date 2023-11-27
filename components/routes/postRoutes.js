@@ -6,6 +6,7 @@ const { checkuserId, createpost, checkPost, addlike, updatelike, checkuserlike, 
 var path = require('path');
 var {isAuth} = require('../validator')
 var fs = require('fs');
+require("dotenv").config()
 
 // console.log(MD5("Message").toString());
 
@@ -45,7 +46,7 @@ router.post('/upload',isAuth,upload.single('file'), async (req, res, next) => {
       var datas = {
         "user_id": req.body.user_id,
         "post_text": req.body.post_text,
-        "img_url": 'http://localhost:8080/posts/images/' + filename,
+        "img_url": process.env.client_url+'posts/images/' + filename,
       }
 
       const result = await createpost(datas);

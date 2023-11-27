@@ -15,6 +15,7 @@ const { hash, compare } = require('bcrypt')
 const UserModel = require('../models/UserModel');
 const { isEmpty } = require('../validator')
 const {welcomeEmail} = require('../emailTemplate')
+const {getprofiledetails} = require('../models/profileModel')
 const transport = nodemailer.createTransport({
     service: 'Gmail',
     auth: {
@@ -123,24 +124,29 @@ module.exports = {
                             "token":usertoken
                         }
 
-                        const sessionresult = await UserModel.createSession(sessiondata)
-
-                        if (sessionresult == 1) {
-                            return res.send({
-                                code: 0,
-                                message: 'login-success',
-                                id: users.result.Id,
-                                name: users.result.Name,
-                                email: users.result.Email,
-                                email_verified: users.result.IsVerify,
-                                token: usertoken,
-                            })
-                        } else {
-                            return res.status(200).send({
-                                'code': 1,
-                                "message": "something went wrong"
-                            })
+                        const sessionresult = await UserModel.createSession(sessiondata);
+                        const data = await getprofiledetails(users.result.Id);
+                        console.log(data)
+                        if(data != null && data != undefined){
+                            if (sessionresult == 1) {
+                                return res.send({
+                                    code: 0,
+                                    message: 'login-success111',
+                                    id: users.result.Id,
+                                    name: users.result.Name,
+                                    email: users.result.Email,
+                                    email_verified: users.result.IsVerify,
+                                    token: usertoken,
+                                    user_details:data
+                                })
+                            } else {
+                                return res.status(200).send({
+                                    'code': 1,
+                                    "message": "something went wrong"
+                                })
+                            }
                         }
+                        
                     } else {
                         return res.send({
                             code: 1,

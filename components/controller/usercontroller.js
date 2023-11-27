@@ -67,11 +67,11 @@ module.exports = {
                 // client_url
                 // const url = `http://localhost:51397/pages/email_verify/${accessToken}`;
 
-                const liveurl =  process.env.client_url+'/pages/email_verify/${accessToken}'
+                const liveurl =  process.env.client_url+'pages/email_verify/'+accessToken
 
-                const output =  welcomeEmail(userRegisterData['name'],url)
+                const output =  welcomeEmail(userRegisterData['name'],liveurl)
                 // res.status(200)
-                // res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:url });
+                // res.send({ code: 0, message: 'Mail Sent Your Register Mail ID',link:liveurl });
                 transport.sendMail({
                    // userRegisterData.email_id
                     to: userRegisterData.email_id,

@@ -45,7 +45,6 @@ router.post('/upload',isAuth,upload.single('file'), async (req, res, next) => {
       var datas = {
         "user_id": req.body.user_id,
         "post_text": req.body.post_text,
-        "post_date": new Date(),
         "img_url": 'http://localhost:8080/posts/images/' + filename,
       }
 
@@ -250,6 +249,7 @@ router.get('/images/:id', async (req, res) => {
   };
 
   var type = mime[path.extname(file).slice(1)]
+  console.log(path.extname(file).slice(1))
 
   // Read the image file
   fs.readFile(url, (err, data) => {
@@ -259,7 +259,7 @@ router.get('/images/:id', async (req, res) => {
       res.end('Image not found');
     } else {
       // Set the content type to image/jpeg (or the appropriate type for your image)
-      res.writeHead(200, { 'Content-Type': type });
+      // res.writeHead(200, { 'Content-Type': type });
       // Send the image data as the response
       res.end(data);
     }

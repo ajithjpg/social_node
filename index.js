@@ -14,8 +14,14 @@ const nodemailer = require('nodemailer');
 const {welcomeEmail} = require('./components/emailTemplate')
 const corsOptions = {
   "origin": "*",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Request-Method':'*',
+  'Access-Control-Allow-Methods':'OPTIONS, GET',
+  'Access-Control-Allow-Headers':'*',
+
   optionsSuccessStatus: 200
 }
+
 
 const name = 'dillibabu'
 

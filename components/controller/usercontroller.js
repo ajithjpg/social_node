@@ -128,7 +128,7 @@ module.exports = {
 
                         const sessionresult = await UserModel.createSession(sessiondata);
                         const data = await getprofiledetails(users.result.Id);
-                        console.log(data)
+                     
                         if(data != null && data != undefined){
                             if (sessionresult == 1) {
                                 return res.send({
@@ -187,7 +187,7 @@ module.exports = {
 
                     if (nModified == 1) {
 
-                        var default_img ='http://localhost:8080/posts/images/default.jpg';
+                        var default_img =process.env.client_url+'/posts/images/default.jpg';
                         var datas = {
                             "User_Id":id_check.response['Id'],
                             "username":id_check.response['Name'],

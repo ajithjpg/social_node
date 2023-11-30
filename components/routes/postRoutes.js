@@ -20,7 +20,7 @@ function getExtension(filename) {
 const storage = multer.diskStorage({
 
   destination: function (req, file, cb) {
-    cb(null, '../')
+    cb(null, './uploads')
   },
   filename: function (req, file, cb) {
     cb(null, MD5(date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')).toString() + '.' + getExtension(file.originalname))

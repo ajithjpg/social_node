@@ -27,7 +27,6 @@ module.exports = {
     },
 
     async createMessage(msgdata) {
-        console.log(msgdata)
         return new Promise((resolve, reject) => {
             sql.query("INSERT INTO message_history SET ?", msgdata, (err, res) => {
                 if (err) {
@@ -36,7 +35,7 @@ module.exports = {
                     reject(err);
                 } else {
 
-                    resolve(1);
+                    resolve(res);
                 }
             });
         })

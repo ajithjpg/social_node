@@ -46,7 +46,7 @@ router.post('/upload',isAuth,upload.single('file'), async (req, res, next) => {
       var datas = {
         "user_id": req.body.user_id,
         "post_text": req.body.post_text,
-        "img_url": process.env.client_url+'posts/images/' + filename,
+        "img_url": process.env.server_url+'posts/images/' + filename,
       }
 
       const result = await createpost(datas);

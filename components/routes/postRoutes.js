@@ -20,7 +20,7 @@ function getExtension(filename) {
 const storage = multer.diskStorage({
 
   destination: function (req, file, cb) {
-    cb(null, './uploads')
+    cb(null, process.env.upload_path )
   },
   filename: function (req, file, cb) {
     cb(null, MD5(date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')).toString() + '.' + getExtension(file.originalname))
@@ -236,7 +236,7 @@ router.post('/commend/:post_id/:user_id',isAuth, async (req, res, next) => {
 router.get('/images/:id', async (req, res) => {
 
   var file = req.params.id;
-  var url = './uploads/' + file;
+  var url =  process.env.upload_path + file;
 
   var mime = {
     html: 'text/html',
@@ -296,7 +296,7 @@ router.post('/images/:id',isAuth, upload.single('file'), async (req, res, next) 
       return res.send({
         'code': 0,
         "message": "Image Upload Successfully",
-        "imageURL": 'http://localhost:8080/posts/images/' + filename,
+        "imageURL":  process.env.server_url + filename,
       })
     } else {
       return res.send({

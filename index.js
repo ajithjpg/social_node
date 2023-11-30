@@ -73,7 +73,7 @@ const notfount = '404 Page Not Found'
 app.get('/', (req, res) => {
 
   res.status(200)
-  res.json('Sample Node API Version1');
+  res.json('Sample Node API Version start');
 })
 
 app.get('/mail', (req, res) => {

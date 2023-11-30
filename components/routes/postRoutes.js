@@ -257,7 +257,7 @@ router.get('/images/:id', async (req, res) => {
     if (err) {
       // Handle any errors (e.g., file not found)
       res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('Image not found');
+      res.end('Image not found'+url);
     } else {
       // Set the content type to image/jpeg (or the appropriate type for your image)
       // res.writeHead(200, { 'Content-Type': type });

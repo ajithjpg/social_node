@@ -296,7 +296,7 @@ router.post('/images/:id',isAuth, upload.single('file'), async (req, res, next) 
       return res.send({
         'code': 0,
         "message": "Image Upload Successfully",
-        "imageURL":  process.env.server_url + filename,
+        "imageURL":  process.env.server_url+'posts/images/'+ filename,
       })
     } else {
       return res.send({

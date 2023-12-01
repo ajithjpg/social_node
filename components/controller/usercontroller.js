@@ -187,7 +187,7 @@ module.exports = {
 
                     if (nModified == 1) {
 
-                        var default_img =process.env.client_url+'/posts/images/default.jpg';
+                        var default_img =process.env.server_url+'posts/images/default.jpg';
                         var datas = {
                             "User_Id":id_check.response['Id'],
                             "username":id_check.response['Name'],

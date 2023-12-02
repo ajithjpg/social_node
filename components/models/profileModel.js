@@ -1,5 +1,5 @@
 const sql = require("./db.js");
-
+require("dotenv").config()
 
 module.exports = {
     async getprofiledetails(id) {
@@ -16,7 +16,7 @@ module.exports = {
     },
     async getpostdetails(id) {
         return new Promise((resolve, reject) => {
-            sql.query(`SELECT post_id, post_text,post_date,img_url FROM photogrm_post WHERE user_id = '${id}' ORDER BY post_date DESC LIMIT 10 OFFSET 0`, (err, res) => {
+            sql.query(`SELECT post_id, post_text,post_date,img_url FROM photogram_post WHERE user_id = '${id}' ORDER BY post_date DESC LIMIT 10 OFFSET 0`, (err, res) => {
                 if (err) {
                     reject(err)
                 } else {
@@ -29,7 +29,7 @@ module.exports = {
     async checkuserId(id) {
 
         return new Promise((resolve, reject) => {
-            sql.query(`select * from photogrm_users WHERE Id = '${id}'`, (err, res) => {
+            sql.query(`select * from photogram_users WHERE Id = '${id}'`, (err, res) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -149,7 +149,7 @@ module.exports = {
         const onlyToken = token.slice(7, token.length);
 
         return new Promise((resolve, reject) => {
-            sql.query(`SELECT * FROM photogrm_user_session WHERE token='${onlyToken}'`, (err, res) => {
+            sql.query(`SELECT * FROM photogram_user_session WHERE token='${onlyToken}'`, (err, res) => {
                 if (err) {
                     reject(err)
                 }

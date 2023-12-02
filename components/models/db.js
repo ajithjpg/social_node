@@ -12,6 +12,8 @@ const connection = mysql.createPool({
   port: process.env.DB_PORT             // port name, "3306" by default
 })
 
+
+
 // connection.getConnection( (err, connection)=> {   if (err) throw (err)
 //   console.log ("DB connected successful: " + connection.threadId)}
 // )

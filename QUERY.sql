@@ -1,7 +1,7 @@
 
 -- user table
 
-CREATE TABLE `photogrm`.`photogrm_users` (
+CREATE TABLE `photogrm`.`photogram_users` (
     `Id` INT NOT NULL AUTO_INCREMENT , 
     `Name` VARCHAR(128) NOT NULL , 
     `Email` VARCHAR(128) NOT NULL ,
@@ -14,7 +14,7 @@ ENGINE = InnoDB;
 
 -- session table
 
-CREATE TABLE `photogrm`.`photogrm_user_session` (
+CREATE TABLE `photogrm`.`photogram_user_session` (
     `session_id` INT NOT NULL AUTO_INCREMENT , 
     `user_id` INT NOT NULL , 
     `start_time` VARCHAR(45) NOT NULL , 
@@ -27,7 +27,7 @@ ENGINE = InnoDB;
 
 -- post table
 
-CREATE TABLE `photogrm`.`photogrm_post` (
+CREATE TABLE `photogrm`.`photogram_post` (
     `post_id` INT NOT NULL AUTO_INCREMENT ,
     `user_id` INT NOT NULL , 
     `post_text` TEXT NOT NULL ,

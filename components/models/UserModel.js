@@ -1,9 +1,9 @@
 const sql = require("./db.js");
-
+require("dotenv").config()
 module.exports.findByemail = (email) => {
   //0 - ERR , 1 - FOUND , 2 - NOT FOUND
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM photogrm_users WHERE Email ='${email}'`, (err, results) => {
+    sql.query(`SELECT * FROM photogram_users WHERE Email ='${email}'`, (err, results) => {
       if (err) {
         reject(err);
       } else {
@@ -12,10 +12,9 @@ module.exports.findByemail = (email) => {
     });
   });
 }
-
 module.exports.create = (newUser) => {
   return new Promise((resolve, reject) => {
-    sql.query("INSERT INTO photogrm_users SET ?", newUser, (err, res) => {
+    sql.query("INSERT INTO photogram_users SET ?", newUser, (err, res) => {
       if (err) {
         console.log("error: ", err);
         reject(err);
@@ -32,7 +31,7 @@ module.exports.create = (newUser) => {
 }
 module.exports.update = (id) => {
   return new Promise((resolve, reject) => {
-    sql.query(`UPDATE photogrm_users SET IsVerify = 1 WHERE id = '${id}'`, (err, res) => {
+    sql.query(`UPDATE photogram_users SET IsVerify = 1 WHERE id = '${id}'`, (err, res) => {
       if (err) {
         console.log("error: ", err);
         // result(err, null);
@@ -48,7 +47,7 @@ module.exports.update = (id) => {
 module.exports.signByemail = (email) => {
   //0 - ERR , 1 - FOUND , 2 - NOT FOUND
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM photogrm_users WHERE Email ='${email}'`, (err, results) => {
+    sql.query(`SELECT * FROM photogram_users WHERE Email ='${email}'`, (err, results) => {
       if (err) {
         reject(err);
       } else {
@@ -72,7 +71,7 @@ module.exports.signByemail = (email) => {
 }
 module.exports.createSession = (User) => {
   return new Promise((resolve, reject) => {
-    sql.query("INSERT INTO photogrm_user_session SET ?", User, (err, res) => {
+    sql.query("INSERT INTO photogram_user_session SET ?", User, (err, res) => {
       if (err) {
         console.log("error: ", err);
         // result(err, null);
@@ -88,7 +87,7 @@ module.exports.createSession = (User) => {
 module.exports.checkuserId = (id) => {
 
   return new Promise((resolve, reject) => {
-    sql.query(`select * from photogrm_users WHERE Id = '${id}'`, (err, res) => {
+    sql.query(`select * from photogram_users WHERE Id = '${id}'`, (err, res) => {
       if (err) {
         reject(err);
       } else {
@@ -129,7 +128,7 @@ module.exports.createprofile = (data) => {
 
 module.exports.getcurrentId = (token) => {
   return new Promise((resolve, reject) => {
-    sql.query(`SELECT * FROM photogrm_user_session WHERE token = '${token}'`, (err, res) => {
+    sql.query(`SELECT * FROM photogram_user_session WHERE token = '${token}'`, (err, res) => {
       if (err) {
         reject(err)
       }else{

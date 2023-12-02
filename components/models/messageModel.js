@@ -1,5 +1,5 @@
 const sql = require("./db.js");
-
+require("dotenv").config()
 module.exports = {
 
     async create_participant(datas) {

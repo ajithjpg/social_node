@@ -31,18 +31,18 @@ module.exports.isAuth = (req, res, next) => {
       if (decode.exp < (new Date().getTime() + 1) / 1000) {
         return res.status(401).send({ message: 'Session expired' });
       }
-      const check_token = (Token) => {
-        return UserModel.getcurrentId(Token)
-      }
-      const check_token_status = check_token(onlyToken);
-      check_token_status.then((data) => {
-        console.log(data)
-        if (data.length != 0) {
-          console.log(data.response)
-        } else {
-          return res.status(401).send({ message: 'Session expired1' });
-        }
-      })
+      // const check_token = (Token) => {
+      //   return UserModel.getcurrentId(Token)
+      // }
+      // const check_token_status = check_token(onlyToken);
+      // check_token_status.then((data) => {
+      //   console.log(data)
+      //   if (data.length != 0) {
+      //     console.log(data.response)
+      //   } else {
+      //     return res.status(401).send({ message: 'Session expired1' });
+      //   }
+      // })
 
       req.user = decode;
       next();

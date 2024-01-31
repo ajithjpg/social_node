@@ -4,6 +4,7 @@ const userRoutes = require('./components/routes/UserRoutes')
 const postRoutes = require('./components/routes/postRoutes')
 const messageRouter = require('./components/routes/messageRoutes')
 const ProfileRouter = require('./components/routes/profileRoutes')
+const FoodRouter = require('./components/routes/foodRouters')
 const app = express();
 const cors = require('cors');
 const bcrypt = require('bcrypt');
@@ -64,6 +65,7 @@ app.use('/getprofile', ProfileRouter);
 app.use('/profile', ProfileRouter);
 app.use('/editprofile', postRoutes);
 app.use('/user', ProfileRouter);
+app.use('/food', FoodRouter);
 
 
 
@@ -73,7 +75,12 @@ const notfount = '404 Page Not Found'
 app.get('/', (req, res) => {
 
   res.status(200)
-  res.json('Sample Node API Version start');
+  // res.json('Sample Node API Version start');
+  const token = crypto.randomBytes(48).toString('base64url');
+  res.send({
+    'message':'',
+    'token':token
+  })
 })
 
 app.get('/mail', (req, res) => {
